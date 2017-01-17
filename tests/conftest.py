@@ -3,6 +3,7 @@ import pytest
 
 from requests.models import Response, codes
 
+
 @pytest.fixture(scope='module')
 def responses_dict():
     response_types = [
@@ -26,15 +27,21 @@ def responses_dict():
 
     responses['response_ok_with_valid_json_content'].status_code = codes.ok
     responses['response_ok_with_valid_json_content'].headers['Content-Type'] = 'application/json'
-    responses['response_ok_with_valid_json_content']._content = b'[{"offerId":"a7b6c5d4e3f2g1","targetedCountries":["AU","CA","GB","IE","NL","NO","NZ","SE","US"],"incentivized":3,"storeId":"2","targetPlatform":"iOS","active":false,"appId":"abcdefghijklmn","appName":"Testing App","appIconUrl":"http://www.requests_response_json_mock.com/creatives/abcdefghijklmn.png","productId":"12ab3cd456789e","advertiserName":"unittester@tune.com","capDetails":null,"id":"a1b2c3d4e5f6g7","name":"Testing App Multiverse campaign","clicks":324,"cr":4.01,"conversions":13,"spent":13.0}]'
+    responses[
+        'response_ok_with_valid_json_content'
+    ]._content = b'[{"offerId":"a7b6c5d4e3f2g1","targetedCountries":["AU","CA","GB","IE","NL","NO","NZ","SE","US"],"incentivized":3,"storeId":"2","targetPlatform":"iOS","active":false,"appId":"abcdefghijklmn","appName":"Testing App","appIconUrl":"http://www.requests_response_json_mock.com/creatives/abcdefghijklmn.png","productId":"12ab3cd456789e","advertiserName":"unittester@tune.com","capDetails":null,"id":"a1b2c3d4e5f6g7","name":"Testing App Multiverse campaign","clicks":324,"cr":4.01,"conversions":13,"spent":13.0}]'
 
     responses['response_ok_with_invalid_json_content'].status_code = codes.ok
     responses['response_ok_with_invalid_json_content'].headers['Content-Type'] = 'application/json'
-    responses['response_ok_with_invalid_json_content']._content = b'[{"offerId":"a7b6c5d4e3f2g1","targetedCountries":["AU","CA","GB","IE","NL","NO","NZ","SE","US"],"incentivized":3,"storeId":"2","targetPlatform":"iOS","active":false,"appId":"abcdefghijklmn","appName":"Testing App","appIconUrl":"http://www.requests_response_json_mock.com/creatives/abcdefghijklmn.png","productId":"12ab3cd456789e","advertiserName":"unittester@tune.com","capDetails":null,"id":"a1b2c3d4e5f6g7","name":"Testing App Multiverse campaign","clicks":324,"cr":4.01,"conversions":13,"spent":13.0'
+    responses[
+        'response_ok_with_invalid_json_content'
+    ]._content = b'[{"offerId":"a7b6c5d4e3f2g1","targetedCountries":["AU","CA","GB","IE","NL","NO","NZ","SE","US"],"incentivized":3,"storeId":"2","targetPlatform":"iOS","active":false,"appId":"abcdefghijklmn","appName":"Testing App","appIconUrl":"http://www.requests_response_json_mock.com/creatives/abcdefghijklmn.png","productId":"12ab3cd456789e","advertiserName":"unittester@tune.com","capDetails":null,"id":"a1b2c3d4e5f6g7","name":"Testing App Multiverse campaign","clicks":324,"cr":4.01,"conversions":13,"spent":13.0'
 
     responses['response_ok_with_valid_html_content'].status_code = codes.ok
     responses['response_ok_with_valid_html_content'].headers['Content-Type'] = 'text/html'
-    responses['response_ok_with_valid_html_content']._content = b'<!DOCTYPE html><html><title>HTML Document</title><body><h1>This is a heading</h1><p>This is a paragraph.</p></body></html>'
+    responses[
+        'response_ok_with_valid_html_content'
+    ]._content = b'<!DOCTYPE html><html><title>HTML Document</title><body><h1>This is a heading</h1><p>This is a paragraph.</p></body></html>'
 
     responses['response_ok_with_invalid_html_content'].status_code = codes.ok
     responses['response_ok_with_invalid_html_content'].headers['Content-Type'] = 'text/html'

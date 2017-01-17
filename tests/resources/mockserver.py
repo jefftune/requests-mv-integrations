@@ -17,6 +17,7 @@ from pyhttpstatus_utils.status_code import HttpStatusCode
 import errno
 import os
 
+
 class StaticFilesHandler(BaseHTTPRequestHandler):
     current_path = os.path.dirname(os.path.realpath(__file__))
 

@@ -16,20 +16,23 @@ response_ok.status_code = codes.ok
 response_bad = Response()
 response_bad.status_code = codes.bad
 
-
-_test_validate_responce_input_output = [
-    ('response_ok', True),
-    ('response_bad', False)
-]
+_test_validate_responce_input_output = [('response_ok', True), ('response_bad', False)]
 
 _test_validate_json_responce_input_output = [
     ('response_ok_no_headers', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED),
     ('response_bad', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_SOFTWARE),
     ('response_ok_with_valid_json_content', None, None),
     ('response_ok_with_invalid_json_content', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_SOFTWARE),
-    ('response_ok_with_valid_html_content', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED),
-    ('response_ok_with_invalid_html_content', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED),
+    (
+        'response_ok_with_valid_html_content', TuneRequestModuleError,
+        TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED
+    ),
+    (
+        'response_ok_with_invalid_html_content', TuneRequestModuleError,
+        TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED
+    ),
 ]
+
 
 @pytest.mark.parametrize("response, expected", _test_validate_responce_input_output)
 def test_validate_response(response, expected, responses_dict):
@@ -45,13 +48,16 @@ def test_validate_response(response, expected, responses_dict):
     assert res == expected
 
 
-@pytest.mark.parametrize("request_response, expected_exception_type, expected_exception_error_code", _test_validate_json_responce_input_output)
+@pytest.mark.parametrize(
+    "request_response, expected_exception_type, expected_exception_error_code",
+    _test_validate_json_responce_input_output
+)
 def test_validate_json_response(
-        request_response,
-        expected_exception_type,
-        expected_exception_error_code,
-        responses_dict,
-        monkeypatch,
+    request_response,
+    expected_exception_type,
+    expected_exception_error_code,
+    responses_dict,
+    monkeypatch,
 ):
     monkeypatch.setattr(dump, 'dump_all', lambda x: b'Test')
     try:
@@ -61,7 +67,6 @@ def test_validate_json_response(
             request_label="Unit Testing validate_json_response()",
         )
     except Exception as e:
-        assert(type(e) == expected_exception_type)
+        assert (type(e) == expected_exception_type)
         if expected_exception_error_code is not None:
-            assert(e.error_code == expected_exception_error_code)
-
+            assert (e.error_code == expected_exception_error_code)

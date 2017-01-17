@@ -29,13 +29,20 @@ request_raised_exceptions_test_object = (
     (requests.exceptions.HTTPError, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST_HTTP),
     (BrokenPipeError, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT),
     (ConnectionError, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT),
-    (requests.packages.urllib3.exceptions.ProtocolError, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT),
-    (requests.packages.urllib3.exceptions.ReadTimeoutError, TuneRequestServiceError, TuneRequestErrorCodes.GATEWAY_TIMEOUT),
+    (
+        requests.packages.urllib3.exceptions.ProtocolError, TuneRequestModuleError,
+        TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT
+    ),
+    (
+        requests.packages.urllib3.exceptions.ReadTimeoutError, TuneRequestServiceError,
+        TuneRequestErrorCodes.GATEWAY_TIMEOUT
+    ),
     (requests.exceptions.TooManyRedirects, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST_REDIRECTS),
     (requests.exceptions.RequestException, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_REQUEST),
     (TuneRequestBaseError, TuneRequestBaseError, TuneRequestErrorCodes.REQ_ERR_UNEXPECTED),
     (Exception, TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_SOFTWARE),
 )
+
 
 @pytest.fixture
 def custom_matcher(request):
@@ -51,6 +58,7 @@ def custom_matcher(request):
         resp = None
     return resp
 
+
 @pytest.fixture
 def request_mv_integration_object():
     """
@@ -60,6 +68,7 @@ def request_mv_integration_object():
     obj.retry_tries, obj.retry_delay, obj.timeout = 3, 1, 10
     obj.request_retry_excps = [ReadTimeout]
     return obj
+
 
 @pytest.fixture
 def tune_request_object():
@@ -78,6 +87,7 @@ def tune_request_object():
     obj.session = session
     return obj
 
+
 @pytest.fixture
 def ok_request_args_dict():
     """
@@ -85,8 +95,10 @@ def ok_request_args_dict():
     """
     return {
         'allow_redirects': True,
-        'headers': {'Content-Type': 'application/json',
-                    'User-Agent': '(requests-mv-integrations/0.2.1, Python/3.5.2)'},
+        'headers': {
+            'Content-Type': 'application/json',
+            'User-Agent': '(requests-mv-integrations/0.2.1, Python/3.5.2)'
+        },
         'params': 'key=11111111222222223333333344444444',
         'request_method': 'GET',
         'request_url': 'mock://test.com/path/OK',
@@ -94,8 +106,10 @@ def ok_request_args_dict():
         'verify': True
     }
 
+
 class RequestRetryException(TuneRequestBaseError):
     pass
+
 
 _request_retry_test_object = (
     ('RequestRetryException', None),
@@ -264,6 +278,7 @@ try_send_request_test_object = (
     ),
 )
 
+
 @pytest.fixture(scope='session')
 def exceptions():
     exceptions_dict = dict()
@@ -271,26 +286,25 @@ def exceptions():
     exceptions_dict[TuneRequestBaseError.__name__] = TuneRequestBaseError()
     exceptions_dict[Exception.__name__] = Exception()
     exceptions_dict[TuneRequestModuleError.__name__] = dict()
-    exceptions_dict[TuneRequestModuleError.__name__][TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED] = TuneRequestModuleError(
-        error_code=TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED
-    )
-    exceptions_dict[TuneRequestModuleError.__name__][TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE] = TuneRequestModuleError(
-        error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE
-    )
+    exceptions_dict[TuneRequestModuleError.__name__][TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED
+                                                     ] = TuneRequestModuleError(
+                                                         error_code=TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED
+                                                     )
+    exceptions_dict[TuneRequestModuleError.__name__][TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE
+                                                     ] = TuneRequestModuleError(
+                                                         error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE
+                                                     )
     return exceptions_dict
+
 
 class TestRequestMvIntegration:
     """
     A test class, for testing RequestMvIntegration methods.
     """
+
     @pytest.mark.parametrize("requests_error, mv_integration_error, error_code", request_raised_exceptions_test_object)
     def test_request_raised_exceptions(
-            self,
-            monkeypatch,
-            request_mv_integration_object,
-            requests_error,
-            mv_integration_error,
-            error_code
+        self, monkeypatch, request_mv_integration_object, requests_error, mv_integration_error, error_code
     ):
         """
         Test RequestMvIntegration.request() exception handling, my mocking the call
@@ -304,27 +318,21 @@ class TestRequestMvIntegration:
         :return: assert that the expected thrown exception of RequestMvIntegration.request()
         is the correct one.
         """
+
         def mock__request_retry(*args, **kwargs):
             if requests_error == requests.packages.urllib3.exceptions.ReadTimeoutError:
                 raise requests_error('pool', 'url', 'message')
             raise requests_error
+
         req = request_mv_integration_object
         monkeypatch.setattr(req, '_request_retry', mock__request_retry)
         try:
-            req.request(
-                request_method="Doesn't matter",
-                request_url="Doesn't matter"
-            )
+            req.request(request_method="Doesn't matter", request_url="Doesn't matter")
         except Exception as e:
-            assert(isinstance(e, mv_integration_error))
-            assert(e.error_code == error_code)
+            assert (isinstance(e, mv_integration_error))
+            assert (e.error_code == error_code)
 
-    def test_request_happy_path(
-            self,
-            request_mv_integration_object,
-            tune_request_object,
-            ok_request_args_dict
-    ):
+    def test_request_happy_path(self, request_mv_integration_object, tune_request_object, ok_request_args_dict):
         """
         A test for a happy path:
         Call RequestMvIntegration.request() and expect to receive a requests.Response object
@@ -340,30 +348,14 @@ class TestRequestMvIntegration:
         tr = tune_request_object
         req.__tune_request = tr
         request_args = ok_request_args_dict
-        resp = req.request(
-            request_method=request_args['request_method'],
-            request_url=request_args['request_url']
-        )
-        assert(resp.status_code == requests.codes.ok)
-
+        resp = req.request(request_method=request_args['request_method'], request_url=request_args['request_url'])
+        assert (resp.status_code == requests.codes.ok)
 
     @pytest.mark.parametrize("exception_type_name, error_code", _request_retry_test_object)
     def test__request_retry(
-            self,
-            exception_type_name,
-            error_code,
-            exceptions,
-            request_mv_integration_object,
-            monkeypatch
+        self, exception_type_name, error_code, exceptions, request_mv_integration_object, monkeypatch
     ):
-        def mock_try_send_request(
-            _attempts,
-            _tries,
-            request_func,
-            request_label,
-            request_retry_func,
-            request_url
-        ):
+        def mock_try_send_request(_attempts, _tries, request_func, request_label, request_retry_func, request_url):
             if exception_type_name in exceptions:
                 all_exception_type_exceptions = exceptions[exception_type_name]
                 if error_code is not None:
@@ -372,10 +364,8 @@ class TestRequestMvIntegration:
                         raise exception_instance
                     else:
                         raise Exception(
-                            "Bad input to test: No {} exception with error code {}".format(
-                                exception_type_name,
-                                error_code
-                            )
+                            "Bad input to test: No {} exception with error code {}".
+                            format(exception_type_name, error_code)
                         )
                 else:
                     exception_instance = all_exception_type_exceptions
@@ -388,33 +378,35 @@ class TestRequestMvIntegration:
         try:
             request_mv_integration_object._request_retry(call_func=lambda *args, **kwargs: None)
         except Exception as e:
-            assert(type(e).__name__ == exception_type_name)
+            assert (type(e).__name__ == exception_type_name)
             if error_code is not None:
-                assert(e.error_code == error_code)
+                assert (e.error_code == error_code)
 
-
-
-    @pytest.mark.parametrize("attempts, tries, response_type, exception_thrown_by_request_func, request_label, request_retry_func, request_retry_excps_func, request_url, expected_exception_name, expected_error_code, is_expected_response",
-                             try_send_request_test_object)
+    @pytest.mark.parametrize(
+        "attempts, tries, response_type, exception_thrown_by_request_func, request_label, request_retry_func, request_retry_excps_func, request_url, expected_exception_name, expected_error_code, is_expected_response",
+        try_send_request_test_object
+    )
     def test_try_send_request(
-            self,
-            attempts,
-            tries,
-            response_type,
-            exception_thrown_by_request_func,
-            request_label,
-            request_retry_func,
-            request_retry_excps_func,
-            request_url,
-            expected_exception_name,
-            expected_error_code,
-            is_expected_response,
-            request_mv_integration_object,
-            responses_dict,
+        self,
+        attempts,
+        tries,
+        response_type,
+        exception_thrown_by_request_func,
+        request_label,
+        request_retry_func,
+        request_retry_excps_func,
+        request_url,
+        expected_exception_name,
+        expected_error_code,
+        is_expected_response,
+        request_mv_integration_object,
+        responses_dict,
     ):
         def mock_request_func():
-            assert(exception_thrown_by_request_func is not None or
-                   response_type is not None and  response_type in responses_dict)
+            assert (
+                exception_thrown_by_request_func is not None or response_type is not None and
+                response_type in responses_dict
+            )
             if exception_thrown_by_request_func is not None:
                 raise exception_thrown_by_request_func
             if response_type is not None:
@@ -431,14 +423,14 @@ class TestRequestMvIntegration:
             request_url,
         )
         # Can't have a result of both throwing an exception and returning a valid response
-        assert(to_raise_exception is None or to_return_response is None)
+        assert (to_raise_exception is None or to_return_response is None)
         # In case if throwing an exception, check that the expected type is thrown,
         # with the expected error code if provided
         if expected_exception_name is not None:
-            assert(type(to_raise_exception).__name__ == expected_exception_name)
+            assert (type(to_raise_exception).__name__ == expected_exception_name)
         else:
-            assert(to_raise_exception is None)
+            assert (to_raise_exception is None)
         if expected_error_code is not None:
             assert (to_raise_exception.error_code == expected_error_code)
         if is_expected_response:
-            assert(isinstance(to_return_response, Response))
+            assert (isinstance(to_return_response, Response))

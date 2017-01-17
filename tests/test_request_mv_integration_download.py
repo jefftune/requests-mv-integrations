@@ -1,20 +1,14 @@
 import pytest
 import os
 
-from .resources.mockserver import (
-    run_server,
-    HTTP_SERVER_PORT,
-    StaticFilesHandler
-)
-from requests_mv_integrations import (
-    RequestMvIntegrationDownload,
-
-)
+from .resources.mockserver import (run_server, HTTP_SERVER_PORT, StaticFilesHandler)
+from requests_mv_integrations import (RequestMvIntegrationDownload,)
 import csv
 
 from os import sep
 
 from subprocess import Popen, PIPE
+
 
 @pytest.fixture(scope='session')
 def request_mv_integration_download_object():
@@ -29,6 +23,7 @@ test_csv_stream_url = "http://localhost:{}/stream.csv".format(HTTP_SERVER_PORT)
 TMP_CSV_FILE_NAME = 'csv_mock.csv'
 TMP_JSON_FILE_NAME = 'json_mock.json'
 TMP_DIRECTORY = './tmp'
+
 
 def compare_csv_file_to_csv_list(csv_file_path, csv_list):
     with open(csv_file_path, 'rt') as csv_file:
@@ -57,6 +52,7 @@ def compare_csv_file_to_csv_list(csv_file_path, csv_list):
                 return False
 
     return True
+
 
 def compare_csv_files(file_path_1, file_path_2):
     with open(file_path_1, 'rt') as csvfile1:
@@ -102,7 +98,7 @@ class TestRequestMvIntegrationDownload:
         # Check, whether the method has yielded the CSV file values correctly ( We mocked an
         # HTTP GET server to return in the response, the content of a predefined csv file )
         downloaded_file_path = TMP_DIRECTORY + sep + TMP_CSV_FILE_NAME
-        assert(compare_csv_files(StaticFilesHandler.csv_file_name(), downloaded_file_path))
+        assert (compare_csv_files(StaticFilesHandler.csv_file_name(), downloaded_file_path))
 
         # Now, check that the content of the list of csv dictionary rows, is correct
         assert (compare_csv_file_to_csv_list(StaticFilesHandler.csv_file_name(), csv_as_list))
@@ -125,8 +121,7 @@ class TestRequestMvIntegrationDownload:
         # Compare two files by running a diff command in shell
         sts = Popen(['diff', downloaded_file_path, mock_file_path], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         diff_res = sts.stdout.read()
-        assert(diff_res == b'')
-
+        assert (diff_res == b'')
 
     def test_stream_csv(self, request_mv_integration_download_object, run_server):
         # RequestMvIntegrationDownload.stream_csv(...) return a generator.
@@ -134,11 +129,10 @@ class TestRequestMvIntegrationDownload:
         csv_as_list = list(
             request_mv_integration_download_object.stream_csv(
                 request_url=test_csv_stream_url,
-                request_params = None,
+                request_params=None,
             )
         )
 
         # Check, wether the method has streamed the CSV file correctly ( We mocked the an HTTP GET server to
         # return in the response, the content of a predefined csv file )
-        assert(compare_csv_file_to_csv_list(StaticFilesHandler.csv_file_name(), csv_as_list))
-
+        assert (compare_csv_file_to_csv_list(StaticFilesHandler.csv_file_name(), csv_as_list))

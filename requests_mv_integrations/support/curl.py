@@ -75,7 +75,7 @@ def command_line_request_curl(
             if isinstance(request_params, dict):
                 request_data = urllib.parse.urlencode(request_params)
             elif isinstance(request_params, str):
-                request_data=request_params
+                request_data = request_params
 
     elif request_method in ['POST', 'PUT']:
         if request_params:
