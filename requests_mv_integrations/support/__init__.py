@@ -43,7 +43,9 @@ from .singleton import (Singleton)
 from .utils import (
     base_class_name,
     full_class_name,
-    convert_size,
+    bytes_to_human,
     python_check_version,
     urlencode_dict,
+    disk_usage,
+    mem_usage
 )

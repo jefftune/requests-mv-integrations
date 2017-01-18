@@ -9,8 +9,8 @@ import json
 import logging
 import os
 import time
-import urllib.parse
 from functools import partial
+# from pprintpp import pprint
 
 import requests
 from logging_mv_integrations import (
@@ -18,14 +18,12 @@ from logging_mv_integrations import (
     TuneLoggingHandler,
     get_logger,
 )
-from pprintpp import pprint
 from pyhttpstatus_utils import (
     HttpStatusCode,
     HttpStatusType,
     http_status_code_to_desc,
     http_status_code_to_type,
     is_http_status_type,
-    is_http_status_successful,
 )
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
@@ -52,6 +50,8 @@ from requests_mv_integrations.support import (
     python_check_version,
     safe_dict,
     safe_str,
+    disk_usage,
+    mem_usage,
     REQUEST_RETRY_EXCPS,
     REQUEST_RETRY_HTTP_STATUS_CODES,
     __USER_AGENT__,
@@ -367,6 +367,9 @@ class RequestMvIntegration(object):
 
         self.logger.debug("Request: Details", extra=extra_request)
 
+        self.logger.debug("Request: Disk Usage: Start", extra=disk_usage("./tmp"))
+        self.logger.debug("Request: Memory Usage: Start", extra=mem_usage())
+
         try:
             self._prep_request_retry(request_retry, request_retry_http_status_codes)
             response = self._request_retry(
@@ -474,9 +477,12 @@ class RequestMvIntegration(object):
         request_time_msecs = int(diff_req.total_seconds() * 1000)
 
         self.logger.debug(
-            "Request: Completed", extra={'request_label': request_label,
+            "Request: Finished", extra={'request_label': request_label,
                                          'request_time_msecs': request_time_msecs}
         )
+
+        self.logger.debug("Request: Disk Usage: Finished", extra=disk_usage("./tmp"))
+        self.logger.debug("Request: Memory Usage: Finished", extra=mem_usage())
 
         return response
 

@@ -6,6 +6,7 @@
 """
 
 import sys
+import psutil
 
 
 #  Check Python Version
@@ -30,28 +31,75 @@ def python_check_version(required_version):
     return 0
 
 
-def convert_size(size, precision=2):
-    """Convert Size
+# def xconvert_size(size, precision=2):
+#     """Convert Size
+#
+#     Args:
+#         size:
+#         precision:
+#
+#     Returns:
+#
+#     """
+#     suffixes = ['B', 'KB', 'MB', 'GB', 'TB']
+#     suffixIndex = 0
+#
+#     while size > 1024 and suffixIndex < 4:
+#         suffixIndex += 1  # increment the index of the suffix
+#         size = size / 1024.0  # apply the division
+#
+#     suffix = suffixes[suffixIndex]
+#     if suffix == 'B':
+#         precision = 0
+#
+#     return "%.*f %s" % (precision, size, suffix)
 
-    Args:
-        size:
-        precision:
 
-    Returns:
+def bytes_to_human(size, precision=2):
+    # http://code.activestate.com/recipes/578019
+    # >>> bytes_to_human(10000)
+    # '9.8K'
+    # >>> bytes_to_human(100001221)
+    # '95.4M'
+    suffixes = ('K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
+    prefix = {}
+    for i, suffix in enumerate(suffixes):
+        prefix[suffix] = 1 << (i + 1) * 10
+    for suffix in reversed(suffixes):
+        if size >= prefix[suffix]:
+            value = float(size) / prefix[suffix]
+            return '%.*f %sB' % (precision, value, suffix)
+    return "%s B" % size
 
-    """
-    suffixes = ['B', 'KB', 'MB', 'GB', 'TB']
-    suffixIndex = 0
 
-    while size > 1024 and suffixIndex < 4:
-        suffixIndex += 1  # increment the index of the suffix
-        size = size / 1024.0  # apply the division
+def mem_usage():
+    virt = psutil.virtual_memory()
+    swap = psutil.swap_memory()
+    return {
+        'Mem': {
+            'total': bytes_to_human(virt.total),
+            'used': bytes_to_human(virt.used),
+            'free': bytes_to_human(virt.free / 1024),
+            'shared': bytes_to_human(getattr(virt, 'shared', 0)),
+            'buffers': bytes_to_human(getattr(virt, 'buffers', 0)),
+            'cached': bytes_to_human(getattr(virt, 'cached', 0))
+        },
+        'Swap:': {
+            'total': bytes_to_human(swap.total),
+            'used': bytes_to_human(swap.used),
+            'free': bytes_to_human(swap.free)
+        }
+    }
 
-    suffix = suffixes[suffixIndex]
-    if suffix == 'B':
-        precision = 0
 
-    return "%.*f %s" % (precision, size, suffix)
+def disk_usage(dir):
+    usage = psutil.disk_usage(dir)
+    return {
+        'total': bytes_to_human(usage.total),
+        'used': bytes_to_human(usage.used),
+        'free': bytes_to_human(usage.free),
+        'percent': int(usage.percent)
+    }
 
 
 def base_class_name(obj):

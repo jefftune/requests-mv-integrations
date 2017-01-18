@@ -23,7 +23,7 @@ from requests_mv_integrations.errors import (get_exception_message, TuneRequestE
 from requests_mv_integrations.exceptions.custom import (TuneRequestModuleError,)
 from requests_mv_integrations.support import (
     base_class_name,
-    convert_size,
+    bytes_to_human,
     csv_skip_last_row,
     detect_bom,
     handle_json_decode_error,
@@ -31,6 +31,8 @@ from requests_mv_integrations.support import (
     remove_bom,
     safe_dict,
     validate_response,
+    disk_usage,
+    mem_usage,
 )
 from requests_mv_integrations.support.curl import command_line_request_curl
 from .request_mv_integration import (RequestMvIntegration)
@@ -105,7 +107,7 @@ class RequestMvIntegrationDownload(object):
         csv_header=None,
         encoding_write=None,
         encoding_read=None,
-        decode_unicode=False
+        decode_unicode=False,
     ):
         """Download and Read CSV file.
 
@@ -157,6 +159,9 @@ class RequestMvIntegrationDownload(object):
         _attempts = 0
         _tries = 60
         _delay = 10
+
+        log.info("Request CSV Download: Disk Usage: Start", extra=disk_usage(tmp_directory))
+        log.info("Request CSV Download: Memory Usage: Start", extra=mem_usage())
 
         while _tries:
             _attempts += 1
@@ -264,10 +269,13 @@ class RequestMvIntegrationDownload(object):
             extra={
                 'request_label': request_label,
                 'file_path': tmp_csv_file_path,
-                'file_size': convert_size(tmp_csv_file_size),
+                'file_size': bytes_to_human(tmp_csv_file_size),
                 'encoding_read': encoding_read
             }
         )
+
+        log.info("Request CSV Download: Disk Usage: Finished", extra=disk_usage(tmp_directory))
+        log.info("Request CSV Download: Memory Usage: Finished", extra=mem_usage())
 
         with open(file=tmp_csv_file_path, mode='r', encoding=encoding_read) as csv_file_r:
             if read_first_row:
@@ -320,7 +328,7 @@ class RequestMvIntegrationDownload(object):
         allow_redirects=True,
         verify=True,
         encoding_write=None,
-        encoding_read=None
+        encoding_read=None,
     ):
         """Download and Read JSON file.
 
@@ -367,6 +375,9 @@ class RequestMvIntegrationDownload(object):
         _attempts = 0
         _tries = 60
         _delay = 10
+        
+        log.info("Request JSON Download: Disk Usage: Start", extra=disk_usage(tmp_directory))
+        log.info("Request JSON Download: Memory Usage: Start", extra=mem_usage())
 
         while _tries:
             _attempts += 1
@@ -450,7 +461,7 @@ class RequestMvIntegrationDownload(object):
             mode_write = 'wb' if encoding_write is None else 'w'
 
             log.debug(
-                "Request JSON Download: Download Raw",
+                "Request JSON Download: Finished",
                 extra={
                     'file_path': tmp_json_file_path,
                     'mode_write': mode_write,
@@ -458,6 +469,9 @@ class RequestMvIntegrationDownload(object):
                     'request_label': request_label
                 }
             )
+
+            log.info("Request JSON Download: Disk Usage: Finished", extra=disk_usage(tmp_directory))
+            log.info("Request JSON Download: Memory Usage: Finished", extra=mem_usage())
 
             chunk_total_sum = 0
 
@@ -587,7 +601,7 @@ class RequestMvIntegrationDownload(object):
             "Request JSON Download: By Chunk: Completed: Details",
             extra={
                 'file_path': tmp_json_file_path,
-                'file_size': convert_size(tmp_json_file_size),
+                'file_size': bytes_to_human(tmp_json_file_size),
                 'chunk_total_sum': chunk_total_sum,
                 'bom_encoding': bom_enc
             }
@@ -610,7 +624,7 @@ class RequestMvIntegrationDownload(object):
 
         response_extra = {
             'file_path': tmp_json_file_path,
-            'file_size': convert_size(tmp_json_file_size),
+            'file_size': bytes_to_human(tmp_json_file_size),
             'request_label': request_label
         }
 
@@ -662,7 +676,7 @@ class RequestMvIntegrationDownload(object):
         return json_download
 
     def download_csv(
-        self, response, tmp_directory, tmp_csv_file_name, request_label=None, encoding_write=None, decode_unicode=False
+        self, response, tmp_directory, tmp_csv_file_name, request_label=None, encoding_write=None, decode_unicode=False,
     ):
         log.info("Request Download CSV: Start")
 
@@ -690,6 +704,9 @@ class RequestMvIntegrationDownload(object):
                 'request_label': request_label
             }
         )
+        
+        log.info("Download CSV: Disk Usage: Start", extra=disk_usage(tmp_directory))
+        log.info("Download CSV: Memory Usage: Start", extra=mem_usage())
 
         chunk_total_sum = 0
 
@@ -729,7 +746,7 @@ class RequestMvIntegrationDownload(object):
                     extra={
                         'error_exception': error_exception,
                         'error_details': error_details,
-                        'chunk_total_sum': convert_size(chunk_total_sum),
+                        'chunk_total_sum': bytes_to_human(chunk_total_sum),
                         'request_label': request_label
                     }
                 )
@@ -745,7 +762,7 @@ class RequestMvIntegrationDownload(object):
                     extra={
                         'error_exception': error_exception,
                         'error_details': error_details,
-                        'chunk_total_sum': convert_size(chunk_total_sum),
+                        'chunk_total_sum': bytes_to_human(chunk_total_sum),
                         'request_label': request_label
                     }
                 )
@@ -758,7 +775,7 @@ class RequestMvIntegrationDownload(object):
                     extra={
                         'error_exception': base_class_name(request_ex),
                         'error_details': get_exception_message(request_ex),
-                        'chunk_total_sum': convert_size(chunk_total_sum),
+                        'chunk_total_sum': bytes_to_human(chunk_total_sum),
                         'request_label': request_label
                     }
                 )
@@ -770,7 +787,7 @@ class RequestMvIntegrationDownload(object):
                     extra={
                         'error_exception': base_class_name(ex),
                         'error_details': get_exception_message(ex),
-                        'chunk_total_sum': convert_size(chunk_total_sum),
+                        'chunk_total_sum': bytes_to_human(chunk_total_sum),
                         'request_label': request_label
                     }
                 )
@@ -783,11 +800,14 @@ class RequestMvIntegrationDownload(object):
             "Request Download CSV: By Chunk: Completed: Details",
             extra={
                 'file_path': tmp_csv_file_path,
-                'file_size': convert_size(tmp_csv_file_size),
-                'chunk_total_sum': convert_size(chunk_total_sum),
+                'file_size': bytes_to_human(tmp_csv_file_size),
+                'chunk_total_sum': bytes_to_human(chunk_total_sum),
                 'bom_encoding': bom_enc
             }
         )
+
+        log.info("Download CSV: Disk Usage: Finished", extra=disk_usage(tmp_directory))
+        log.info("Download CSV: Memory Usage: Finished", extra=mem_usage())
 
         tmp_csv_file_name_wo_ext = \
             os.path.splitext(
@@ -817,6 +837,7 @@ class RequestMvIntegrationDownload(object):
         request_url,
         request_params,
         csv_delimiter=',',
+        tmp_directory='./tmp',
         request_retry=None,
         request_headers=None,
         chunk_size=1024,
@@ -838,7 +859,10 @@ class RequestMvIntegrationDownload(object):
         Returns:
 
         """
-        log.info("Request Stream CSV: Start", extra={'report_url': request_url})
+        log.info("Stream CSV: Start", extra={'report_url': request_url})
+
+        log.info("Stream CSV: Disk Usage: Start", extra=disk_usage(tmp_directory))
+        log.info("Stream CSV: Memory Usage: Start", extra=mem_usage())
 
         response = self.mv_request.request(
             request_method="GET",
@@ -880,6 +904,9 @@ class RequestMvIntegrationDownload(object):
                 'response_http_status_code': response_http_status_code
             }
         )
+
+        log.info("Stream CSV: Disk Usage: Finished", extra=disk_usage(tmp_directory))
+        log.info("Stream CSV: Memory Usage: Finished", extra=mem_usage())
 
         line_count = 0
         csv_keys_str = None

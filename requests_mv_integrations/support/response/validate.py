@@ -39,7 +39,7 @@ from requests_mv_integrations.errors import (
 )
 from requests_mv_integrations.exceptions import (TuneRequestModuleError,)
 from requests_mv_integrations.support.utils import (
-    convert_size,
+    bytes_to_human,
     base_class_name,
     python_check_version,
 )
@@ -99,7 +99,7 @@ def validate_response(
         if 'Content-Length' in response.headers:
             response_headers_content_length = \
                 safe_int(response.headers['Content-Length'])
-            response_extra.update({'Content-Length': convert_size(response_headers_content_length)})
+            response_extra.update({'Content-Length': bytes_to_human(response_headers_content_length)})
 
         if 'Content-Encoding' in response.headers:
             response_content_encoding = \
