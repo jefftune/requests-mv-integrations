@@ -22,7 +22,7 @@ test_json_download_url = "http://localhost:{}/download.json".format(HTTP_SERVER_
 test_csv_stream_url = "http://localhost:{}/stream.csv".format(HTTP_SERVER_PORT)
 TMP_CSV_FILE_NAME = 'csv_mock.csv'
 TMP_JSON_FILE_NAME = 'json_mock.json'
-TMP_DIRECTORY = './tmp'
+TMP_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/tmp'
 
 
 def compare_csv_file_to_csv_list(csv_file_path, csv_list):

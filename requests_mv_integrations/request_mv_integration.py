@@ -367,7 +367,7 @@ class RequestMvIntegration(object):
 
         self.logger.debug("Request: Details", extra=extra_request)
 
-        self.logger.debug("Request: Disk Usage: Start", extra=disk_usage("./"))
+        self.logger.debug("Request: Disk Usage: Start", extra=disk_usage("/"))
         self.logger.debug("Request: Memory Usage: Start", extra=mem_usage())
 
         try:
@@ -481,7 +481,7 @@ class RequestMvIntegration(object):
                                          'request_time_msecs': request_time_msecs}
         )
 
-        self.logger.debug("Request: Disk Usage: Finished", extra=disk_usage("./"))
+        self.logger.debug("Request: Disk Usage: Finished", extra=disk_usage("/"))
         self.logger.debug("Request: Memory Usage: Finished", extra=mem_usage())
 
         return response

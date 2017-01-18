@@ -86,7 +86,7 @@ class RequestMvIntegrationDownload(object):
         request_method,
         request_url,
         tmp_csv_file_name,
-        tmp_directory='./',
+        tmp_directory='./tmp',
         request_params=None,
         request_data=None,
         request_retry=None,
