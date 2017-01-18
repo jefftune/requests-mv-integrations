@@ -31,30 +31,6 @@ def python_check_version(required_version):
     return 0
 
 
-# def xconvert_size(size, precision=2):
-#     """Convert Size
-#
-#     Args:
-#         size:
-#         precision:
-#
-#     Returns:
-#
-#     """
-#     suffixes = ['B', 'KB', 'MB', 'GB', 'TB']
-#     suffixIndex = 0
-#
-#     while size > 1024 and suffixIndex < 4:
-#         suffixIndex += 1  # increment the index of the suffix
-#         size = size / 1024.0  # apply the division
-#
-#     suffix = suffixes[suffixIndex]
-#     if suffix == 'B':
-#         precision = 0
-#
-#     return "%.*f %s" % (precision, size, suffix)
-
-
 def bytes_to_human(size, precision=2):
     # http://code.activestate.com/recipes/578019
     # >>> bytes_to_human(10000)
