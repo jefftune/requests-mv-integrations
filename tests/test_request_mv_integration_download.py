@@ -1,5 +1,8 @@
 import pytest
 import os
+import tempfile
+
+tmpdir = tempfile.mkdtemp()
 
 from .resources.mockserver import (run_server, HTTP_SERVER_PORT, StaticFilesHandler)
 from requests_mv_integrations import (RequestMvIntegrationDownload,)
@@ -22,7 +25,7 @@ test_json_download_url = "http://localhost:{}/download.json".format(HTTP_SERVER_
 test_csv_stream_url = "http://localhost:{}/stream.csv".format(HTTP_SERVER_PORT)
 TMP_CSV_FILE_NAME = 'csv_mock.csv'
 TMP_JSON_FILE_NAME = 'json_mock.json'
-TMP_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/tmp'
+TMP_DIRECTORY = tmpdir
 
 
 def compare_csv_file_to_csv_list(csv_file_path, csv_list):
@@ -91,13 +94,13 @@ class TestRequestMvIntegrationDownload:
                 request_method="GET",
                 request_url=test_csv_download_url,
                 tmp_csv_file_name=TMP_CSV_FILE_NAME,
-                tmp_directory=TMP_DIRECTORY,
+                tmp_directory=tmpdir,
             )
         )
         # as a side effect, the method saves a csv file in <TMP_DIRECTORY>/<TMP_CSV_FILE_NAME>.
         # Check, whether the method has yielded the CSV file values correctly ( We mocked an
         # HTTP GET server to return in the response, the content of a predefined csv file )
-        downloaded_file_path = TMP_DIRECTORY + sep + TMP_CSV_FILE_NAME
+        downloaded_file_path = tmpdir + sep + TMP_CSV_FILE_NAME
         assert (compare_csv_files(StaticFilesHandler.csv_file_name(), downloaded_file_path))
 
         # Now, check that the content of the list of csv dictionary rows, is correct
@@ -110,12 +113,12 @@ class TestRequestMvIntegrationDownload:
             request_method="GET",
             request_url=test_json_download_url,
             tmp_json_file_name=TMP_JSON_FILE_NAME,
-            tmp_directory=TMP_DIRECTORY,
+            tmp_directory=tmpdir,
         )
 
         # Check, whether the method has saved the file correctly ( We mocked the an HTTP GET server to return a
         # predefined json file )
-        downloaded_file_path = TMP_DIRECTORY + sep + TMP_JSON_FILE_NAME
+        downloaded_file_path = tmpdir + sep + TMP_JSON_FILE_NAME
         mock_file_path = StaticFilesHandler.json_file_name()
 
         # Compare two files by running a diff command in shell
