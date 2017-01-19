@@ -277,7 +277,8 @@ class RequestMvIntegrationDownload(object):
                 csv_report_name = csv_file_r.readline()
                 csv_report_name = re.sub('\"', '', csv_report_name)
                 csv_report_name = re.sub('\n', '', csv_report_name)
-                log.info("Request CSV Download: Report '{}'".format(csv_report_name))
+
+                log.info("Request CSV Download: Report", extra={'csv_report_name': csv_report_name})
             elif skip_first_row:
                 next(csv_file_r)
 
@@ -674,7 +675,7 @@ class RequestMvIntegrationDownload(object):
         encoding_write=None,
         decode_unicode=False,
     ):
-        log.debug("Request CSV Download: Start")
+        log.debug("Download CSV: Start")
 
         if not os.path.exists(tmp_directory):
             os.mkdir(tmp_directory)
