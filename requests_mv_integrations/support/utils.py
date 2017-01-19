@@ -15,6 +15,8 @@ def python_check_version(required_version):
     """Check Python Version
     :param: required_version
     """
+    assert isinstance(required_version, tuple)
+
     current_version = sys.version_info
     if current_version[0] == required_version[0] and \
        current_version[1] >= required_version[1]:
