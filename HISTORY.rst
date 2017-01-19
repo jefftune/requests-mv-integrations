@@ -3,6 +3,10 @@
 Release History
 ===============
 
+0.03.9 (2017-01-18)
+-------------------
+- Log reduction
+
 0.2.9 (2017-01-17)
 ------------------
 - psutil: disc and mem usage

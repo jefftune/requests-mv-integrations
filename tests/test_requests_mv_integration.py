@@ -434,3 +434,6 @@ class TestRequestMvIntegration:
             assert (to_raise_exception.error_code == expected_error_code)
         if is_expected_response:
             assert (isinstance(to_return_response, Response))
+
+    def test_session(self, request_mv_integration_object, run_server):
+        assert request_mv_integration_object.session is not None

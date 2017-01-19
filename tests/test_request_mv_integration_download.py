@@ -139,3 +139,12 @@ class TestRequestMvIntegrationDownload:
         # Check, wether the method has streamed the CSV file correctly ( We mocked the an HTTP GET server to
         # return in the response, the content of a predefined csv file )
         assert (compare_csv_file_to_csv_list(StaticFilesHandler.csv_file_name(), csv_as_list))
+
+    def test_session(self, request_mv_integration_download_object, run_server):
+        assert request_mv_integration_download_object.session is not None
+
+    def test_tune_request(self, request_mv_integration_download_object, run_server):
+        assert request_mv_integration_download_object.tune_request is not None
+
+    def test_mv_request(self, request_mv_integration_download_object, run_server):
+        assert request_mv_integration_download_object.mv_request is not None
