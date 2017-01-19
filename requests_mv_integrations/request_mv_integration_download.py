@@ -674,7 +674,7 @@ class RequestMvIntegrationDownload(object):
         encoding_write=None,
         decode_unicode=False,
     ):
-        log.info("Request Download CSV: Start")
+        log.debug("Request CSV Download: Start")
 
         if not os.path.exists(tmp_directory):
             os.mkdir(tmp_directory)
@@ -790,7 +790,7 @@ class RequestMvIntegrationDownload(object):
         bom_enc, bom_len, bom_header = detect_bom(tmp_csv_file_path)
 
         log.info(
-            "Request Download CSV: By Chunk: Completed: Details",
+            "Request CSV Download: By Chunk: Completed: Details",
             extra={
                 'file_path': tmp_csv_file_path,
                 'file_size': bytes_to_human(tmp_csv_file_size),
@@ -817,7 +817,7 @@ class RequestMvIntegrationDownload(object):
 
         bom_enc, bom_len = remove_bom(tmp_csv_file_path, tmp_csv_file_path_wo_bom)
 
-        log.debug("Request Download CSV: Encoding", extra={'bom_enc': bom_enc, 'bom_len': bom_len})
+        log.debug("Request CSV Download: Encoding", extra={'bom_enc': bom_enc, 'bom_len': bom_len})
 
         if bom_len > 0:
             tmp_csv_file_path = tmp_csv_file_path_wo_bom
