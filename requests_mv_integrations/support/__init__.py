@@ -20,7 +20,10 @@ from .constants import (
     REQUEST_RETRY_EXCPS,
     REQUEST_RETRY_HTTP_STATUS_CODES,
 )
-from .curl import (command_line_request_curl, parse_curl)
+from .curl import (
+    command_line_request_curl,
+    parse_curl,
+)
 from .safe_cast import (
     safe_cast,
     safe_dict,
@@ -41,5 +44,12 @@ from .response import (
 from .tune_request import (TuneRequest)
 from .singleton import (Singleton)
 from .utils import (
-    base_class_name, full_class_name, bytes_to_human, python_check_version, urlencode_dict, disk_usage, mem_usage
+    base_class_name,
+    full_class_name,
+    bytes_to_human,
+    python_check_version,
+    urlencode_dict,
+    disk_usage,
+    mem_usage,
+    env_usage,
 )

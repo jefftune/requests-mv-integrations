@@ -31,8 +31,7 @@ from requests_mv_integrations.support import (
     remove_bom,
     safe_dict,
     validate_response,
-    disk_usage,
-    mem_usage,
+    env_usage,
 )
 from requests_mv_integrations.support.curl import command_line_request_curl
 from .request_mv_integration import (RequestMvIntegration)
@@ -160,9 +159,6 @@ class RequestMvIntegrationDownload(object):
         _tries = 60
         _delay = 10
 
-        log.info("Request CSV Download: Disk Usage: Start", extra=disk_usage(tmp_directory))
-        log.info("Request CSV Download: Memory Usage: Start", extra=mem_usage())
-
         while _tries:
             _attempts += 1
 
@@ -274,8 +270,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.info("Request CSV Download: Disk Usage: Finished", extra=disk_usage(tmp_directory))
-        log.info("Request CSV Download: Memory Usage: Finished", extra=mem_usage())
+        log.debug("Request CSV Download: Usage", extra=env_usage(tmp_directory))
 
         with open(file=tmp_csv_file_path, mode='r', encoding=encoding_read) as csv_file_r:
             if read_first_row:
@@ -296,8 +291,7 @@ class RequestMvIntegrationDownload(object):
                 csv_header_hr.append({'index': index, 'name': column_name})
                 index += 1
 
-            log.info("Request CSV Download: Content Header", extra={'csv_header': csv_header_hr})
-
+            log.debug("Request CSV Download: Content Header", extra={'csv_header': csv_header_hr})
             csv_fieldnames = csv_header if csv_header else csv_header_actual
 
             csv_dict_reader = csv.DictReader(csv_file_r, fieldnames=csv_fieldnames, delimiter=csv_delimiter)
@@ -375,9 +369,6 @@ class RequestMvIntegrationDownload(object):
         _attempts = 0
         _tries = 60
         _delay = 10
-
-        log.info("Request JSON Download: Disk Usage: Start", extra=disk_usage(tmp_directory))
-        log.info("Request JSON Download: Memory Usage: Start", extra=mem_usage())
 
         while _tries:
             _attempts += 1
@@ -470,8 +461,7 @@ class RequestMvIntegrationDownload(object):
                 }
             )
 
-            log.info("Request JSON Download: Disk Usage: Finished", extra=disk_usage(tmp_directory))
-            log.info("Request JSON Download: Memory Usage: Finished", extra=mem_usage())
+            log.debug("Request JSON Download: Usage", extra=env_usage(tmp_directory))
 
             chunk_total_sum = 0
 
@@ -711,9 +701,6 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.info("Download CSV: Disk Usage: Start", extra=disk_usage(tmp_directory))
-        log.info("Download CSV: Memory Usage: Start", extra=mem_usage())
-
         chunk_total_sum = 0
 
         with open(file=tmp_csv_file_path, mode=mode_write, encoding=encoding_write) as csv_file_wb:
@@ -802,7 +789,7 @@ class RequestMvIntegrationDownload(object):
         tmp_csv_file_size = os.path.getsize(tmp_csv_file_path)
         bom_enc, bom_len, bom_header = detect_bom(tmp_csv_file_path)
 
-        log.debug(
+        log.info(
             "Request Download CSV: By Chunk: Completed: Details",
             extra={
                 'file_path': tmp_csv_file_path,
@@ -812,8 +799,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.info("Download CSV: Disk Usage: Finished", extra=disk_usage(tmp_directory))
-        log.info("Download CSV: Memory Usage: Finished", extra=mem_usage())
+        log.debug("Download CSV: Usage", extra=env_usage(tmp_directory))
 
         tmp_csv_file_name_wo_ext = \
             os.path.splitext(
@@ -867,9 +853,6 @@ class RequestMvIntegrationDownload(object):
         """
         log.info("Stream CSV: Start", extra={'report_url': request_url})
 
-        log.info("Stream CSV: Disk Usage: Start", extra=disk_usage(tmp_directory))
-        log.info("Stream CSV: Memory Usage: Start", extra=mem_usage())
-
         response = self.mv_request.request(
             request_method="GET",
             request_url=request_url,
@@ -911,8 +894,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.info("Stream CSV: Disk Usage: Finished", extra=disk_usage(tmp_directory))
-        log.info("Stream CSV: Memory Usage: Finished", extra=mem_usage())
+        log.debug("Stream CSV: Usage", extra=env_usage(tmp_directory))
 
         line_count = 0
         csv_keys_str = None

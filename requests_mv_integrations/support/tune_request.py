@@ -48,11 +48,14 @@ class TuneRequest(metaclass=Singleton):
     def request(self, request_method, request_url, **kwargs):
         extra_session_request = {'method': request_method, 'url': request_url}
         extra_session_request.update(kwargs)
-        log.info("Session Request: Details", extra=extra_session_request)
+        log.debug("Session Request: Details", extra=extra_session_request)
         try:
             return self.session.request(method=request_method, url=request_url, **kwargs)
         except Exception as ex:
-            log.warning("Session Request: Failed: {}".format(get_exception_message(ex)), extra=extra_session_request)
+            log.warning(
+                "Session Request: Failed: {}".format(get_exception_message(ex)),
+                extra=extra_session_request,
+            )
             raise
 
     def request_safe(self, request_method, request_url, response_hook=None, exception_handler=None, **kwargs):
@@ -72,7 +75,7 @@ class TuneRequest(metaclass=Singleton):
             return None
 
     def response_hook(self, r, *args, **kwargs):
-        log.info("{0} {1} {2}".format(r.request.method, r.url, str(r.status_code)))
+        log.debug("{0} {1} {2}".format(r.request.method, r.url, str(r.status_code)))
 
     def exception_handler(self, r, e):
         log.error("url: {0}".format(r.url))

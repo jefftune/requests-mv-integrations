@@ -50,8 +50,7 @@ from requests_mv_integrations.support import (
     python_check_version,
     safe_dict,
     safe_str,
-    disk_usage,
-    mem_usage,
+    env_usage,
     REQUEST_RETRY_EXCPS,
     REQUEST_RETRY_HTTP_STATUS_CODES,
     __USER_AGENT__,
@@ -366,9 +365,7 @@ class RequestMvIntegration(object):
             extra_request.update({'request_retry_excps_func': request_retry_excps_func})
 
         self.logger.debug("Request: Details", extra=extra_request)
-
-        self.logger.debug("Request: Disk Usage: Start", extra=disk_usage("/"))
-        self.logger.debug("Request: Memory Usage: Start", extra=mem_usage())
+        self.logger.debug("Request: Usage: Start", extra=env_usage("/"))
 
         try:
             self._prep_request_retry(request_retry, request_retry_http_status_codes)
@@ -476,13 +473,12 @@ class RequestMvIntegration(object):
 
         request_time_msecs = int(diff_req.total_seconds() * 1000)
 
-        self.logger.debug(
+        self.logger.info(
             "Request: Finished", extra={'request_label': request_label,
                                         'request_time_msecs': request_time_msecs}
         )
 
-        self.logger.debug("Request: Disk Usage: Finished", extra=disk_usage("/"))
-        self.logger.debug("Request: Memory Usage: Finished", extra=mem_usage())
+        self.logger.info("Request: Usage", extra=env_usage("/"))
 
         return response
 
