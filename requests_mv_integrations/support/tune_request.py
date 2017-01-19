@@ -104,13 +104,12 @@ class TuneRequest(metaclass=Singleton):
     #
     #     return response_hook, exception_handler
 
-
-# def backoff(factor, max_delay):
-#     sleep_time = 1
-#
-#     def inner():
-#         asleep_time = sleep_time * factor
-#         asleep_time = asleep_time if asleep_time < max_delay else max_delay
-#         return asleep_time
-#
-#     return inner
+    # def backoff(factor, max_delay):
+    #     sleep_time = 1
+    #
+    #     def inner():
+    #         asleep_time = sleep_time * factor
+    #         asleep_time = asleep_time if asleep_time < max_delay else max_delay
+    #         return asleep_time
+    #
+    #     return inner
