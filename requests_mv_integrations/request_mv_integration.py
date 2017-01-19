@@ -478,7 +478,7 @@ class RequestMvIntegration(object):
 
         self.logger.debug(
             "Request: Finished", extra={'request_label': request_label,
-                                         'request_time_msecs': request_time_msecs}
+                                        'request_time_msecs': request_time_msecs}
         )
 
         self.logger.debug("Request: Disk Usage: Finished", extra=disk_usage("/"))

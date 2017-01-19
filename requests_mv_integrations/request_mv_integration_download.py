@@ -375,7 +375,7 @@ class RequestMvIntegrationDownload(object):
         _attempts = 0
         _tries = 60
         _delay = 10
-        
+
         log.info("Request JSON Download: Disk Usage: Start", extra=disk_usage(tmp_directory))
         log.info("Request JSON Download: Memory Usage: Start", extra=mem_usage())
 
@@ -676,7 +676,13 @@ class RequestMvIntegrationDownload(object):
         return json_download
 
     def download_csv(
-        self, response, tmp_directory, tmp_csv_file_name, request_label=None, encoding_write=None, decode_unicode=False,
+        self,
+        response,
+        tmp_directory,
+        tmp_csv_file_name,
+        request_label=None,
+        encoding_write=None,
+        decode_unicode=False,
     ):
         log.info("Request Download CSV: Start")
 
@@ -704,7 +710,7 @@ class RequestMvIntegrationDownload(object):
                 'request_label': request_label
             }
         )
-        
+
         log.info("Download CSV: Disk Usage: Start", extra=disk_usage(tmp_directory))
         log.info("Download CSV: Memory Usage: Start", extra=mem_usage())
 

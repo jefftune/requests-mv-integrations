@@ -41,11 +41,5 @@ from .response import (
 from .tune_request import (TuneRequest)
 from .singleton import (Singleton)
 from .utils import (
-    base_class_name,
-    full_class_name,
-    bytes_to_human,
-    python_check_version,
-    urlencode_dict,
-    disk_usage,
-    mem_usage
+    base_class_name, full_class_name, bytes_to_human, python_check_version, urlencode_dict, disk_usage, mem_usage
 )

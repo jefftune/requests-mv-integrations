@@ -1,7 +1,6 @@
 import pytest
 import os
 
-
 TMP_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/tmp'
 
 from .resources.mockserver import run_server
