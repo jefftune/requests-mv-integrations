@@ -104,7 +104,7 @@ def urlencode_dict(request_data):
     assert isinstance(request_data, dict)
 
     request_data_query = ""
-    for key in request_data.keys():
+    for key in sorted(request_data.keys()):
         request_data_query += str(key) + '=' + str(request_data[key]) + "&"
 
     return request_data_query[:-1]

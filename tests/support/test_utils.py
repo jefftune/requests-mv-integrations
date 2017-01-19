@@ -36,8 +36,7 @@ def test_full_class_name():
 
 
 def test_urlencode_dict():
-    assert urlencode_dict({'a': 1, 'b': 2, 'c': 3}) in \
-        [ 'c=3&b=2&a=1', 'b=2&a=1&c=3', 'a=1&b=2&c=3', 'b=2&c=3&a=1', 'a=1&c=3&b=2', 'c=3&a=1&b=2', ]
+    assert urlencode_dict({'a': 1, 'b': 2, 'c': 3}) == 'a=1&b=2&c=3'
 
 
 def test_bytes_to_human_1_B():
