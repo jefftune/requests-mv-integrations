@@ -11,6 +11,7 @@ from base64 import b64encode
 import requests
 import shlex
 import argparse
+from requests_mv_integrations.support.utils import urlencode_dict
 
 # from pprintpp import pprint
 
@@ -108,7 +109,10 @@ def command_line_request_curl(
 
     if request_method == 'GET':
         if request_data:
-            params = request_data.split("&")
+            if isinstance(request_data, str):
+                params = request_data.split("&")
+            elif isinstance(request_data, dict):
+                params = urlencode_dict(request_data).split("&")
 
             command += (" -G" " --data {params}" " '{url}'")
 
