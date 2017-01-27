@@ -6,6 +6,7 @@
 import codecs
 from requests_mv_integrations.support import (get_bom_encoding)
 
+
 def test_bom_encoding():
     bom_enc, bom_len = get_bom_encoding(b'\xc4\x8f\xc2\xbb\xc5\xbc')
     assert bom_len == 6

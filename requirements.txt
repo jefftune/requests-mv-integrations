@@ -1,6 +1,6 @@
 beautifulsoup4==4.5.3
 DateTime==4.1.1
-deepdiff==2.5.3
+deepdiff==3.0.0
 iron-cache==0.3.2
 logging-mv-integrations==0.0.4
 pprintpp==0.3.0

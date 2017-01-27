@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#  @copyright 2016 TUNE, Inc. (http://www.tune.com)
+#  @copyright 2017 TUNE, Inc. (http://www.tune.com)
 #  @namespace requests_mv_integrations
-"""Helpers: Functions for commonly used utilities.
-"""
 
 import sys
-import psutil
 
 
 #  Check Python Version
@@ -48,45 +45,6 @@ def bytes_to_human(size, precision=2):
             value = float(size) / prefix[suffix]
             return '%.*f %sB' % (precision, value, suffix)
     return "%s B" % size
-
-
-def mem_usage():
-    virt = psutil.virtual_memory()
-    # swap = psutil.swap_memory()
-    return {
-        'Mem': {
-            'total': bytes_to_human(virt.total),
-            'used': bytes_to_human(virt.used),
-            'free': bytes_to_human(virt.free / 1024),
-            'shared': bytes_to_human(getattr(virt, 'shared', 0)),
-            'buffers': bytes_to_human(getattr(virt, 'buffers', 0)),
-            'cached': bytes_to_human(getattr(virt, 'cached', 0))
-        },
-        # 'Swap:': {
-        #     'total': bytes_to_human(swap.total),
-        #     'used': bytes_to_human(swap.used),
-        #     'free': bytes_to_human(swap.free)
-        # }
-    }
-
-
-def disk_usage(dir):
-    usage = psutil.disk_usage(dir)
-    return {
-        'Disk:': {
-            'total': bytes_to_human(usage.total),
-            'used': bytes_to_human(usage.used),
-            'free': bytes_to_human(usage.free),
-            'percent': int(usage.percent)
-        }
-    }
-
-
-def env_usage(dir):
-    usage = {}
-    usage.update(disk_usage(dir))
-    usage.update(mem_usage())
-    return usage
 
 
 def base_class_name(obj):

@@ -472,12 +472,13 @@ class RequestMvIntegration(object):
 
         request_time_msecs = int(diff_req.total_seconds() * 1000)
 
-        self.logger.info(
-            "Request: Finished", extra={'request_label': request_label,
-                                        'request_time_msecs': request_time_msecs}
-        )
+        extra_finished = env_usage()
+        extra_finished.update({
+            'request_label': request_label,
+            'request_time_msecs': request_time_msecs,
+        })
 
-        self.logger.info("Request: Usage", extra=env_usage("/"))
+        self.logger.info("Request: Finished", extra=extra_finished)
 
         return response
 

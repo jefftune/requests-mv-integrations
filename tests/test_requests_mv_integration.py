@@ -120,7 +120,6 @@ test_request_retry_details = (
     ('TuneRequestModuleError', TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE),
 )
 
-
 test_try_send_request_details = (
     (
         None,  # attempts
@@ -345,10 +344,7 @@ class TestRequestMvIntegration:
             assert (isinstance(e, mv_integration_error))
             assert (e.error_code == error_code)
 
-    def test_request_raised_exceptions_none(
-        self,
-        request_mv_integration_object
-    ):
+    def test_request_raised_exceptions_none(self, request_mv_integration_object):
         """
         Test RequestMvIntegration.request() exception handling, my mocking the call
         to RequestMvIntegration._request_retry()

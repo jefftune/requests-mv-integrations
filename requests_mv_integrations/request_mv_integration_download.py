@@ -143,7 +143,7 @@ class RequestMvIntegrationDownload(object):
             Generator containing CSV data by rows in JSON dictionary format.
 
         """
-        log.info(
+        log.debug(
             "Request CSV Download: Start",
             extra={
                 'request_url': request_url,

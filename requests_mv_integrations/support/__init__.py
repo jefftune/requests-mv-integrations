@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#  @copyright 2016 TUNE, Inc. (http://www.tune.com)
+#  @copyright 2017 TUNE, Inc. (http://www.tune.com)
 #  @namespace requests_mv_integrations
 
 from .bom_encoding import (
@@ -50,6 +50,8 @@ from .utils import (
     bytes_to_human,
     python_check_version,
     urlencode_dict,
+)
+from .usage import (
     disk_usage,
     mem_usage,
     env_usage,
