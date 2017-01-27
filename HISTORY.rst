@@ -5,7 +5,8 @@ Release History
 
 0.03.4 (2017-01-27)
 -------------------
-- Usage
+- Reduce logging
+- Disc usage
 
 0.03.3 (2017-01-26)
 -------------------
