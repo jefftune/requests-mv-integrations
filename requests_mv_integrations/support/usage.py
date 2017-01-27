@@ -6,6 +6,7 @@
 import os
 import psutil
 from requests_mv_integrations.support.utils import bytes_to_human
+from requests_mv_integrations.support.constants import IRONIO_PARTITION
 
 
 def mem_usage():
@@ -24,9 +25,10 @@ def mem_usage():
 
 def disk_usage(dir=None):
     if dir is None:
-        dir = "/"
-    elif not os.path.exists(dir):
-        dir = "/"
+        dir = IRONIO_PARTITION
+
+    if not os.path.exists(dir):
+        dir = '/'
 
     usage = psutil.disk_usage(dir)
     return {

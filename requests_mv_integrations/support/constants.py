@@ -23,11 +23,8 @@ __USER_AGENT__ = "({}, {})".format(__MODULE_SIG__, __PYTHON_SIG__)
 
 __LOGGER_NAME__ = __name__.split('.')[0]
 
-HEADER_CONTENT_TYPE_APP_JSON = \
-    {'Content-Type': 'application/json'}
-
-HEADER_CONTENT_TYPE_APP_URLENCODED = \
-    {'Content-Type': 'application/x-www-form-urlencoded'}
+HEADER_CONTENT_TYPE_APP_JSON = {'Content-Type': 'application/json'}
+HEADER_CONTENT_TYPE_APP_URLENCODED = {'Content-Type': 'application/x-www-form-urlencoded'}
 
 HEADER_USER_AGENT = \
     {'User-Agent': __USER_AGENT__}
@@ -45,3 +42,5 @@ REQUEST_RETRY_HTTP_STATUS_CODES = [
     HttpStatusCode.GATEWAY_TIMEOUT,
     HttpStatusCode.TOO_MANY_REQUESTS,
 ]
+
+IRONIO_PARTITION = '/mnt/task'

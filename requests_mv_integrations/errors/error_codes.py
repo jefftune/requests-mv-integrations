@@ -19,10 +19,10 @@ class TuneRequestErrorCodes(HttpStatusCode):
     REQ_ERR_MODULE = 600  # Module Error
 
     REQ_ERR_ARGUMENT = 601
-    # Invalid or missing argument provided.
+    # Invalid or missing argument provided discovered in this module.
 
     REQ_ERR_REQUEST = 602
-    # Exit code that request failed.
+    # Call to Python requests package has failed.
 
     REQ_ERR_SOFTWARE = 603
     # Exit code that means an internal software error was detected.

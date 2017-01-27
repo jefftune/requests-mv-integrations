@@ -85,7 +85,7 @@ class RequestMvIntegrationDownload(object):
         request_method,
         request_url,
         tmp_csv_file_name,
-        tmp_directory='./tmp',
+        tmp_directory,
         request_params=None,
         request_data=None,
         request_retry=None,
@@ -309,7 +309,7 @@ class RequestMvIntegrationDownload(object):
         request_method,
         request_url,
         tmp_json_file_name,
-        tmp_directory='./',
+        tmp_directory,
         request_params=None,
         request_data=None,
         request_retry=None,
@@ -830,7 +830,6 @@ class RequestMvIntegrationDownload(object):
         request_url,
         request_params,
         csv_delimiter=',',
-        tmp_directory='./',
         request_retry=None,
         request_headers=None,
         chunk_size=1024,
@@ -895,7 +894,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.debug("Stream CSV: Usage", extra=env_usage(tmp_directory))
+        log.debug("Stream CSV: Usage", extra=env_usage())
 
         line_count = 0
         csv_keys_str = None

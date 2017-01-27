@@ -230,6 +230,9 @@ test:
 
 coverage:
 	py.test --verbose --cov-report html --cov=requests_mv_integrations tests
-	
+
+coverage-percent:
+	py.test --verbose --cov=requests_mv_integrations tests
+
 list:
 	cat Makefile | grep "^[a-z]" | awk '{print $$1}' | sed "s/://g" | sort
