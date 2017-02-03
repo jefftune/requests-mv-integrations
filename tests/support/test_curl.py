@@ -24,9 +24,7 @@ _test_command_line_request_curl_get_data_str = [(
         "-H 'User-Agent: (requests-mv-integrations/{module_version}, Python/{python_version})' "
         "--connect-timeout 60 -L -G --data 'api_key=11111111222222223333333344444444' "
         "'https://api.partner.com/find'"
-    ).format(
-        module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__
-    ),
+    ).format(module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__),
 ),]
 
 _test_command_line_request_curl_get_data_dict = [(
@@ -44,9 +42,7 @@ _test_command_line_request_curl_get_data_dict = [(
         "-H 'User-Agent: (requests-mv-integrations/{module_version}, Python/{python_version})' "
         "--connect-timeout 60 -L -G --data 'api_key=11111111222222223333333344444444' "
         "'https://api.partner.com/find'"
-    ).format(
-        module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__
-    ),
+    ).format(module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__),
 ),]
 
 _test_command_line_request_curl_get_auth = [(
@@ -63,9 +59,7 @@ _test_command_line_request_curl_get_auth = [(
         "-H 'User-Agent: (requests-mv-integrations/{module_version}, Python/{python_version})' "
         "--connect-timeout 60 -L -G "
         "'https://api.partner.com/find'"
-    ).format(
-        module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__
-    ),
+    ).format(module_version=__MODULE_VERSION__, python_version=__PYTHON_VERSION__),
 ),]
 
 

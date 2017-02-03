@@ -3,7 +3,6 @@
 #  @copyright 2016 TUNE, Inc. (http://www.tune.com)
 #  @namespace requests_mv_integration
 
-
 from requests_mv_integrations.support.safe_cast import (
     safe_float,
     safe_str,
