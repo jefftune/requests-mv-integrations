@@ -4,6 +4,7 @@
 #  @namespace requests_mv_integrations
 
 import logging
+import urllib
 
 import requests
 from logging_mv_integrations import (TuneLoggingFormat)
@@ -69,17 +70,24 @@ class RequestMvIntegrationUpload(object):
         request_label,
         upload_timeout=None
     ):
-        """Upload File to requested URL.
-
-        Args:
-            upload_request_url:
-            upload_data_file_path:
-            upload_data_file_size:
-            upload_timeout:
-
-        Returns:
-
         """
+        Upload File to requested URL.
+
+        :param upload_request_url:
+        :param upload_data_file_path:
+        :param upload_data_file_size:
+        :param is_upload_gzip:
+        :param request_label:
+        :param upload_timeout:
+        :return:
+        """
+
+        assert upload_request_url
+        parsed = urllib.parse.urlparse(upload_request_url)
+        assert parsed
+        assert parsed.scheme
+        assert parsed.netloc
+
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
 
@@ -108,7 +116,7 @@ class RequestMvIntegrationUpload(object):
         try:
             with open(upload_data_file_path, 'rb') as upload_fp:
                 response = self.mv_request.request(
-                    request_method="PUT",
+                    request_method='PUT',
                     request_url=upload_request_url,
                     request_params=None,
                     request_data=upload_fp,
@@ -152,20 +160,26 @@ class RequestMvIntegrationUpload(object):
         return response
 
     def request_upload_data(self, upload_request_url, upload_data, upload_data_size, upload_timeout=None):
-        """Upload Data to requested URL.
+        """
+        Upload Data to requested URL.
 
-        Args:
-            upload_request_url:
-            upload_data:
-
-        Returns:
-            requests.Response
+        :param upload_request_url:
+        :param upload_data:
+        :param upload_data_size:
+        :param upload_timeout:
+        :return:
         """
         log.info(
             "Request Upload JSON Data: Start",
             extra={'upload_data_size': upload_data_size,
                    'upload_request_url': upload_request_url}
         )
+
+        assert upload_request_url
+        parsed = urllib.parse.urlparse(upload_request_url)
+        assert parsed
+        assert parsed.scheme
+        assert parsed.netloc
 
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
@@ -183,7 +197,7 @@ class RequestMvIntegrationUpload(object):
 
         try:
             response = self.mv_request.request(
-                request_method="PUT",
+                request_method='PUT',
                 request_url=upload_request_url,
                 request_params=None,
                 request_data=upload_data,

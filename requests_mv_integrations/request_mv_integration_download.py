@@ -241,19 +241,19 @@ class RequestMvIntegrationDownload(object):
             _tries -= 1
             if not _tries:
                 log.error(
-                    "Request CSV Download: Exhausted Retries",
+                    'Request CSV Download: Exhausted Retries',
                     extra={'tries': _tries,
                            'request_url': request_url,
                            'request_label': request_label}
                 )
 
                 raise TuneRequestModuleError(
-                    error_message="Request CSV Download: Exhausted Retries",
+                    error_message='Request CSV Download: Exhausted Retries',
                     error_code=TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED
                 )
 
             log.info(
-                "Request CSV Download: Performing Retry",
+                'Request CSV Download: Performing Retry',
                 extra={'tries': _tries,
                        'delay': _delay,
                        'request_url': request_url,
@@ -263,7 +263,7 @@ class RequestMvIntegrationDownload(object):
             time.sleep(_delay)
 
         log.info(
-            "Request CSV Download: Finished",
+            'Request CSV Download: Finished',
             extra={
                 'request_label': request_label,
                 'file_path': tmp_csv_file_path,
@@ -272,7 +272,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.debug("Request CSV Download: Usage", extra=env_usage(tmp_directory))
+        log.debug('Request CSV Download: Usage', extra=env_usage(tmp_directory))
 
         with open(file=tmp_csv_file_path, mode='r', encoding=encoding_read) as csv_file_r:
             if read_first_row:
@@ -280,7 +280,7 @@ class RequestMvIntegrationDownload(object):
                 csv_report_name = re.sub('\"', '', csv_report_name)
                 csv_report_name = re.sub('\n', '', csv_report_name)
 
-                log.info("Request CSV Download: Report", extra={'csv_report_name': csv_report_name})
+                log.info('Request CSV Download: Report', extra={'csv_report_name': csv_report_name})
             elif skip_first_row:
                 next(csv_file_r)
 
@@ -294,7 +294,7 @@ class RequestMvIntegrationDownload(object):
                 csv_header_hr.append({'index': index, 'name': column_name})
                 index += 1
 
-            log.debug("Request CSV Download: Content Header", extra={'csv_header': csv_header_hr})
+            log.debug('Request CSV Download: Content Header', extra={'csv_header': csv_header_hr})
             csv_fieldnames = csv_header if csv_header else csv_header_actual
 
             csv_dict_reader = csv.DictReader(csv_file_r, fieldnames=csv_fieldnames, delimiter=csv_delimiter)
@@ -358,7 +358,7 @@ class RequestMvIntegrationDownload(object):
 
         """
         log.info(
-            "Request JSON Download: Start",
+            'Request JSON Download: Start',
             extra={
                 'request_url': request_url,
                 'encoding_write': encoding_write,
@@ -377,7 +377,7 @@ class RequestMvIntegrationDownload(object):
             _attempts += 1
 
             log.debug(
-                "Request JSON Download",
+                'Request JSON Download',
                 extra={'attempts': _attempts,
                        'request_url': request_url,
                        'request_label': request_label}
@@ -403,7 +403,7 @@ class RequestMvIntegrationDownload(object):
 
             if response is None:
                 log.error(
-                    "Request JSON Download: No response",
+                    'Request JSON Download: No response',
                     extra={'request_url': request_url,
                            'request_label': request_label}
                 )
@@ -429,7 +429,7 @@ class RequestMvIntegrationDownload(object):
                     )
 
             log.debug(
-                "Request JSON Download: Response Status",
+                'Request JSON Download: Response Status',
                 extra={
                     'http_status_code': http_status_code,
                     'response_time_secs': response_time_secs,
@@ -449,13 +449,13 @@ class RequestMvIntegrationDownload(object):
                 )
 
             if os.path.exists(tmp_json_file_path):
-                log.debug("Request JSON Download: Removing", extra={'file_path': tmp_json_file_path})
+                log.debug('Request JSON Download: Removing', extra={'file_path': tmp_json_file_path})
                 os.remove(tmp_json_file_path)
 
             mode_write = 'wb' if encoding_write is None else 'w'
 
             log.debug(
-                "Request JSON Download: Finished",
+                'Request JSON Download: Finished',
                 extra={
                     'file_path': tmp_json_file_path,
                     'mode_write': mode_write,
@@ -464,13 +464,13 @@ class RequestMvIntegrationDownload(object):
                 }
             )
 
-            log.debug("Request JSON Download: Usage", extra=env_usage(tmp_directory))
+            log.debug('Request JSON Download: Usage', extra=env_usage(tmp_directory))
 
             chunk_total_sum = 0
 
             with open(file=tmp_json_file_path, mode=mode_write, encoding=encoding_write) as json_raw_file_w:
                 log.debug(
-                    "Request JSON Download: Response Raw: Started",
+                    'Request JSON Download: Response Raw: Started',
                     extra={'file_path': tmp_json_file_path,
                            'request_label': request_label}
                 )
@@ -493,7 +493,7 @@ class RequestMvIntegrationDownload(object):
                         os.fsync(json_raw_file_w.fileno())
 
                     log.debug(
-                        "Request JSON Download: By Chunk: Completed",
+                        'Request JSON Download: By Chunk: Completed',
                         extra={'file_path': tmp_json_file_path,
                                'request_label': request_label}
                     )
@@ -505,7 +505,7 @@ class RequestMvIntegrationDownload(object):
                     error_details = get_exception_message(chunked_encoding_ex)
 
                     log.warning(
-                        "Request JSON Download: {}".format(error_exception),
+                        'Request JSON Download: {}'.format(error_exception),
                         extra={
                             'error_details': error_details,
                             'chunk_total_sum': chunk_total_sum,
@@ -514,7 +514,7 @@ class RequestMvIntegrationDownload(object):
                     )
 
                     if not _tries:
-                        log.error("Request JSON Download: {}: Exhausted Retries".format(error_exception))
+                        log.error('Request JSON Download: {}: Exhausted Retries'.format(error_exception))
                         raise
 
                 except http_client.IncompleteRead as incomplete_read_ex:
@@ -522,7 +522,7 @@ class RequestMvIntegrationDownload(object):
                     error_details = get_exception_message(incomplete_read_ex)
 
                     log.warning(
-                        "Request JSON Download: IncompleteRead",
+                        'Request JSON Download: IncompleteRead',
                         extra={
                             'error_exception': error_exception,
                             'error_details': error_details,
@@ -532,12 +532,12 @@ class RequestMvIntegrationDownload(object):
                     )
 
                     if not _tries:
-                        log.error("Request JSON Download: {}: Exhausted Retries".format(error_exception))
+                        log.error('Request JSON Download: {}: Exhausted Retries'.format(error_exception))
                         raise
 
                 except requests.exceptions.RequestException as request_ex:
                     log.error(
-                        "Request JSON Download: Request Exception",
+                        'Request JSON Download: Request Exception',
                         extra={
                             'error_exception': base_class_name(request_ex),
                             'error_details': get_exception_message(request_ex),
@@ -549,7 +549,7 @@ class RequestMvIntegrationDownload(object):
 
                 except Exception as ex:
                     log.error(
-                        "Request JSON Download: Unexpected Exception",
+                        'Request JSON Download: Unexpected Exception',
                         extra={
                             'error_exception': base_class_name(ex),
                             'error_details': get_exception_message(ex),
@@ -561,14 +561,14 @@ class RequestMvIntegrationDownload(object):
 
                 if not _tries:
                     log.error(
-                        "Request JSON Download: Exhausted Retries",
+                        'Request JSON Download: Exhausted Retries',
                         extra={'tries': _tries,
                                'request_url': request_url,
                                'request_label': request_label}
                     )
 
                     raise TuneRequestModuleError(
-                        error_message=("Request JSON Download: Exhausted Retries: {}: {}").format(
+                        error_message=('Request JSON Download: Exhausted Retries: {}: {}').format(
                             request_label, request_url
                         ),
                         error_request_curl=self.built_request_curl,
@@ -576,7 +576,7 @@ class RequestMvIntegrationDownload(object):
                     )
 
                 log.info(
-                    "Request JSON Download: Performing Retry",
+                    'Request JSON Download: Performing Retry',
                     extra={
                         'tries': _tries,
                         'delay': _delay,
@@ -591,7 +591,7 @@ class RequestMvIntegrationDownload(object):
         bom_enc, bom_len, bom_header = detect_bom(tmp_json_file_path)
 
         log.info(
-            "Request JSON Download: By Chunk: Completed: Details",
+            'Request JSON Download: By Chunk: Completed: Details',
             extra={
                 'file_path': tmp_json_file_path,
                 'file_size': bytes_to_human(tmp_json_file_size),
@@ -607,7 +607,7 @@ class RequestMvIntegrationDownload(object):
 
             with open(file=tmp_json_file_path, mode=mode_write, encoding=encoding_write) as json_file_w:
                 log.debug(
-                    "Request JSON Download: GZip: Started",
+                    'Request JSON Download: GZip: Started',
                     extra={'file_path': tmp_json_file_path,
                            'request_label': request_label}
                 )
@@ -621,7 +621,7 @@ class RequestMvIntegrationDownload(object):
             'request_label': request_label
         }
 
-        log.info("Request JSON Download: Read Downloaded", extra=response_extra)
+        log.info('Request JSON Download: Read Downloaded', extra=response_extra)
 
         json_download = None
         with open(tmp_json_file_path, mode='r') as json_file_r:
@@ -652,7 +652,7 @@ class RequestMvIntegrationDownload(object):
                     'json_file_content_len': len(json_file_content)
                 })
 
-                log.error("Request JSON Download: Failed: Exception", extra=response_extra)
+                log.error('Request JSON Download: Failed: Exception', extra=response_extra)
 
                 handle_json_decode_error(
                     response_decode_ex=ex,
@@ -664,7 +664,7 @@ class RequestMvIntegrationDownload(object):
 
         response_extra.update({'json_file_content_len': len(json_download)})
 
-        log.info("Request JSON Download: Finished", extra=response_extra)
+        log.info('Request JSON Download: Finished', extra=response_extra)
 
         return json_download
 
@@ -689,13 +689,13 @@ class RequestMvIntegrationDownload(object):
             )
 
         if os.path.exists(tmp_csv_file_path):
-            log.debug("Removing previous CSV", extra={'file_path': tmp_csv_file_path})
+            log.debug('Removing previous CSV', extra={'file_path': tmp_csv_file_path})
             os.remove(tmp_csv_file_path)
 
         mode_write = 'wb' if encoding_write is None else 'w'
 
         log.debug(
-            "Download CSV: Details",
+            'Download CSV: Details',
             extra={
                 'file_path': tmp_csv_file_path,
                 'mode_write': mode_write,
@@ -708,7 +708,7 @@ class RequestMvIntegrationDownload(object):
 
         with open(file=tmp_csv_file_path, mode=mode_write, encoding=encoding_write) as csv_file_wb:
             log.debug(
-                "Download CSV: By Chunk: Started",
+                'Download CSV: By Chunk: Started',
                 extra={'file_path': tmp_csv_file_path,
                        'request_label': request_label}
             )
@@ -728,7 +728,7 @@ class RequestMvIntegrationDownload(object):
                     os.fsync(csv_file_wb.fileno())
 
                 log.debug(
-                    "Download CSV: By Chunk: Completed",
+                    'Download CSV: By Chunk: Completed',
                     extra={'file_path': tmp_csv_file_path,
                            'request_label': request_label}
                 )
@@ -754,7 +754,7 @@ class RequestMvIntegrationDownload(object):
                 error_details = get_exception_message(incomplete_read_ex)
 
                 log.warning(
-                    "Download CSV: IncompleteRead",
+                    'Download CSV: IncompleteRead',
                     extra={
                         'error_exception': error_exception,
                         'error_details': error_details,
@@ -767,7 +767,7 @@ class RequestMvIntegrationDownload(object):
 
             except requests.exceptions.RequestException as request_ex:
                 log.error(
-                    "Download CSV: Request Exception",
+                    'Download CSV: RequestException',
                     extra={
                         'error_exception': base_class_name(request_ex),
                         'error_details': get_exception_message(request_ex),
@@ -793,7 +793,7 @@ class RequestMvIntegrationDownload(object):
         bom_enc, bom_len, bom_header = detect_bom(tmp_csv_file_path)
 
         log.info(
-            "Request CSV Download: By Chunk: Completed: Details",
+            'Request CSV Download: By Chunk: Completed: Details',
             extra={
                 'file_path': tmp_csv_file_path,
                 'file_size': bytes_to_human(tmp_csv_file_size),
@@ -853,7 +853,7 @@ class RequestMvIntegrationDownload(object):
         Returns:
 
         """
-        log.info("Stream CSV: Start", extra={'report_url': request_url})
+        log.info('Stream CSV: Start', extra={'report_url': request_url})
 
         response = self.mv_request.request(
             request_method="GET",
@@ -866,7 +866,7 @@ class RequestMvIntegrationDownload(object):
         )
 
         log.info(
-            "Stream CSV: Response",
+            'Stream CSV: Response',
             extra={
                 'response_status_code': response.status_code,
                 'response_headers': response.headers,
@@ -888,7 +888,7 @@ class RequestMvIntegrationDownload(object):
         response_http_status_code = response.status_code
 
         log.debug(
-            "Request Stream CSV: Status: Details",
+            'Stream CSV: Status: Details',
             extra={
                 'response_content_type': response_content_type,
                 'response_transfer_encoding': response_transfer_encoding,
@@ -896,7 +896,7 @@ class RequestMvIntegrationDownload(object):
             }
         )
 
-        log.debug("Stream CSV: Usage", extra=env_usage())
+        log.debug('Stream CSV: Usage', extra=env_usage())
 
         line_count = 0
         csv_keys_str = None
@@ -938,7 +938,7 @@ class RequestMvIntegrationDownload(object):
 
                 if csv_keys_list_len != csv_values_list_len:
                     log.error(
-                        "Mismatch: CSV Key",
+                        'Mismatch: CSV Key',
                         extra={
                             'line': line_count,
                             'csv_keys_list_len': csv_keys_list_len,

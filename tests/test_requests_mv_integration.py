@@ -328,7 +328,7 @@ class TestRequestMvIntegration:
         "requests_error, mv_integration_error, error_code",
         request_raised_exceptions_test_object,
     )
-    def test_request_raised_exceptions(
+    def test_request_method_raised_exceptions(
         self,
         monkeypatch,
         request_mv_integration_object,
@@ -358,12 +358,51 @@ class TestRequestMvIntegration:
         monkeypatch.setattr(req, '_request_retry', mock_request_retry)
         try:
             req.request(
-                request_method="Doesn't matter",
-                request_url="Doesn't matter",
+                request_method='NOT METHOD',
+                request_url='NOT URL',
             )
-        except Exception as e:
-            assert (isinstance(e, mv_integration_error))
-            assert (e.error_code == error_code)
+        except Exception as ex:
+            assert (isinstance(ex, AssertionError))
+
+    @pytest.mark.parametrize(
+        "requests_error, mv_integration_error, error_code",
+        request_raised_exceptions_test_object,
+    )
+    def test_request_url_raised_exceptions(
+        self,
+        monkeypatch,
+        request_mv_integration_object,
+        requests_error,
+        mv_integration_error,
+        error_code,
+    ):
+        """
+        Test RequestMvIntegration.request() exception handling, my mocking the call
+        to RequestMvIntegration._request_retry()
+        :param monkeypatch:
+        :param request_mv_integration_object: An instance of RequestMvIntegration.
+        :param requests_error: The exception which the mock function of
+        RequestMvIntegration._request_retry() throws.
+        :param mv_integration_error: The exception which tested RequestMvIntegration.request()
+        should throw in response to <requests_error>.
+        :return: assert that the expected thrown exception of RequestMvIntegration.request()
+        is the correct one.
+        """
+
+        def mock_request_retry(*args, **kwargs):
+            if requests_error == requests.packages.urllib3.exceptions.ReadTimeoutError:
+                raise requests_error('pool', 'url', 'message')
+            raise requests_error
+
+        req = request_mv_integration_object
+        monkeypatch.setattr(req, '_request_retry', mock_request_retry)
+        try:
+            req.request(
+                request_method='POST',
+                request_url='NOT URL',
+            )
+        except Exception as ex:
+            assert (isinstance(ex, AssertionError))
 
     @pytest.mark.parametrize('tested_http_response', http_responses_4xx_5xx)
     def test_request_http_response_4xx_5xx(self, tested_http_response, request_mv_integration_object, run_server):
@@ -382,7 +421,7 @@ class TestRequestMvIntegration:
             assert ex.error_code == tested_http_response, "Expected exit_code same as mocked http response code: {}.  got: {}"\
                 .format(tested_http_response, ex.error_code)
 
-    def test_request_raised_exceptions_none(self, request_mv_integration_object):
+    def test_request_raised_method_none(self, request_mv_integration_object):
         """
         Test RequestMvIntegration.request() exception handling, my mocking the call
         to RequestMvIntegration._request_retry()
@@ -395,9 +434,24 @@ class TestRequestMvIntegration:
                 request_method=None,
                 request_url=None,
             )
-        except Exception as e:
-            assert (isinstance(e, TuneRequestValueError))
-            assert (e.error_code == TuneRequestErrorCodes.REQ_ERR_ARGUMENT)
+        except Exception as ex:
+            assert (isinstance(ex, AssertionError))
+
+    def test_request_raised_url_none(self, request_mv_integration_object):
+        """
+        Test RequestMvIntegration.request() exception handling, my mocking the call
+        to RequestMvIntegration._request_retry()
+        :param request_mv_integration_object: An instance of RequestMvIntegration.
+        """
+
+        req = request_mv_integration_object
+        try:
+            req.request(
+                request_method='POST',
+                request_url=None,
+            )
+        except Exception as ex:
+            assert (isinstance(ex, AssertionError))
 
     def test_request_happy_path(
         self,

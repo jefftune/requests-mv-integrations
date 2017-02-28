@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#  @copyright 2017 TUNE, Inc. (http://www.tune.com)
+#  @namespace requests_mv_integration
+
 import pytest
 import os
 
@@ -57,12 +62,13 @@ class TestRequestMvIntegrationUpload:
 
         assert content_type in response.headers["Content-Type"]
 
-    @pytest.mark.parametrize('url, message, data', (("url", "Invalid URL", "data"),))
+    @pytest.mark.parametrize('url, message, data', (("http", "Invalid URL", "data"),))
     def test_request_upload_data_fail(self, request_object, url, message, data):
-        with pytest.raises(TuneRequestBaseError) as info:
-            request_object.request_upload_data(url, data, upload_data_size=1)
+        with pytest.raises(AssertionError) as ex:
+            request_object.request_upload_data(upload_request_url=url, upload_data=data, upload_data_size=1)
 
-        assert message in str(info.value)
+        assert ex
+        assert str(ex)
 
     @pytest.mark.parametrize('url, data', ((test_url, "text"),))
     def test_request_upload_data_pass(self, request_object, url, data, run_server):

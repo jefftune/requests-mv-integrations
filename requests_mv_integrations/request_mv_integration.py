@@ -10,6 +10,8 @@ import logging
 import os
 import time
 from functools import partial
+import urllib
+from pprintpp import pprint
 
 import requests
 from logging_mv_integrations import (
@@ -276,7 +278,21 @@ class RequestMvIntegration(object):
             * jitter: extra seconds added to delay between attempts.
                 default: 0.
         """
-        self.logger.debug("Request: Start: {}".format(request_label if request_label else ""))
+        self.logger.debug(
+            "Request '{request_url}': Start: '{request_label}'".
+            format(request_url=request_url, request_label=request_label)
+        )
+
+        assert request_method
+        request_method = request_method.upper()
+        assert request_method in ['POST', 'GET', 'PUT']
+
+        assert request_url
+        parsed = urllib.parse.urlparse(request_url)
+        pprint(parsed)
+        assert parsed
+        assert parsed.scheme
+        assert parsed.netloc
 
         timeout = None
 
@@ -380,11 +396,15 @@ class RequestMvIntegration(object):
                 request_retry_excps_func=request_retry_excps_func
             )
 
+        except AssertionError as ex_assert:
+            print_traceback(ex_assert)
+            raise ex_assert
+
         except (
             requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.Timeout,
         ) as ex_req_timeout:
             raise TuneRequestServiceError(
-                error_message="Request: Exception: Timeout",
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_timeout)),
                 errors=ex_req_timeout,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.GATEWAY_TIMEOUT
@@ -392,7 +412,7 @@ class RequestMvIntegration(object):
 
         except requests.exceptions.HTTPError as ex_req_http:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: HTTP Error",
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_http)),
                 errors=ex_req_http,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST_HTTP
@@ -402,7 +422,7 @@ class RequestMvIntegration(object):
             requests.exceptions.ConnectionError, requests.exceptions.ProxyError, requests.exceptions.SSLError,
         ) as ex_req_connect:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: {}".format(base_class_name(ex_req_connect)),
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_connect)),
                 errors=ex_req_connect,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT
@@ -410,7 +430,7 @@ class RequestMvIntegration(object):
 
         except (BrokenPipeError, ConnectionError,) as ex_ose_connect:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: OSE {}".format(base_class_name(ex_ose_connect)),
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_ose_connect)),
                 errors=ex_ose_connect,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_CONNECT
@@ -418,7 +438,7 @@ class RequestMvIntegration(object):
 
         except requests.packages.urllib3.exceptions.ProtocolError as ex_req_urllib3_protocol:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: Urllib3: Protocol Error",
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_urllib3_protocol)),
                 errors=ex_req_urllib3_protocol,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT
@@ -426,7 +446,7 @@ class RequestMvIntegration(object):
 
         except requests.packages.urllib3.exceptions.ReadTimeoutError as ex_req_urllib3_read_timeout:
             raise TuneRequestServiceError(
-                error_message="Request: Exception: Urllib3: Read Timeout Error",
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_urllib3_read_timeout)),
                 errors=ex_req_urllib3_read_timeout,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.GATEWAY_TIMEOUT
@@ -434,7 +454,7 @@ class RequestMvIntegration(object):
 
         except requests.exceptions.TooManyRedirects as ex_req_redirects:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: Too Many Redirects",
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_redirects)),
                 errors=ex_req_redirects,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST_REDIRECTS
