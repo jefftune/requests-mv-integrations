@@ -11,7 +11,7 @@ import os
 import time
 from functools import partial
 import urllib
-from pprintpp import pprint
+# from pprintpp import pprint
 
 import requests
 from logging_mv_integrations import (
@@ -289,7 +289,6 @@ class RequestMvIntegration(object):
 
         assert request_url
         parsed = urllib.parse.urlparse(request_url)
-        pprint(parsed)
         assert parsed
         assert parsed.scheme
         assert parsed.netloc
@@ -397,8 +396,12 @@ class RequestMvIntegration(object):
             )
 
         except AssertionError as ex_assert:
-            print_traceback(ex_assert)
-            raise ex_assert
+            raise TuneRequestModuleError(
+                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_assert)),
+                errors=ex_assert,
+                error_request_curl=self.built_request_curl,
+                error_code=TuneRequestErrorCodes.REQ_ERR_SOFTWARE
+            )
 
         except (
             requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.Timeout,

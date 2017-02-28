@@ -88,6 +88,8 @@ class RequestMvIntegrationUpload(object):
         assert parsed.scheme
         assert parsed.netloc
 
+        assert request_label
+
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
 
