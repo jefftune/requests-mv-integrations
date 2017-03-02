@@ -362,7 +362,7 @@ class TestRequestMvIntegration:
                 request_url='NOT URL',
             )
         except Exception as ex:
-            assert (isinstance(ex, AssertionError))
+            assert (isinstance(ex, TuneRequestValueError))
 
     @pytest.mark.parametrize(
         "requests_error, mv_integration_error, error_code",
@@ -402,7 +402,7 @@ class TestRequestMvIntegration:
                 request_url='NOT URL',
             )
         except Exception as ex:
-            assert (isinstance(ex, AssertionError))
+            assert (isinstance(ex, TuneRequestValueError))
 
     @pytest.mark.parametrize('tested_http_response', http_responses_4xx_5xx)
     def test_request_http_response_4xx_5xx(self, tested_http_response, request_mv_integration_object, run_server):
@@ -435,7 +435,7 @@ class TestRequestMvIntegration:
                 request_url=None,
             )
         except Exception as ex:
-            assert (isinstance(ex, AssertionError))
+            assert (isinstance(ex, TuneRequestValueError))
 
     def test_request_raised_url_none(self, request_mv_integration_object):
         """
@@ -451,7 +451,7 @@ class TestRequestMvIntegration:
                 request_url=None,
             )
         except Exception as ex:
-            assert (isinstance(ex, AssertionError))
+            assert (isinstance(ex, TuneRequestValueError))
 
     def test_request_happy_path(
         self,

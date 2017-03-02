@@ -278,20 +278,43 @@ class RequestMvIntegration(object):
             * jitter: extra seconds added to delay between attempts.
                 default: 0.
         """
+
+        if not request_method or not isinstance(request_method, str):
+            raise TuneRequestValueError(error_message="Missing 'request_method'")
+
+        request_method = request_method.upper()
+        if request_method not in ['POST', 'GET', 'PUT']:
+            raise TuneRequestValueError(
+                error_message="Invalid 'request_method': '{request_method}'".format(request_method=request_method)
+            )
+
+        if not request_url:
+            raise TuneRequestValueError(error_message="Missing 'request_url'")
+
+        parsed = urllib.parse.urlparse(request_url)
+        if not parsed:
+            raise TuneRequestValueError(
+                error_message="Unable to parse 'request_url': '{request_url}'".format(request_url=request_url)
+            )
+
+        if not parsed.scheme:
+            raise TuneRequestValueError(
+                error_message="'{request_url}': scheme '{parsed_scheme}'".format(
+                    request_url=request_url, parsed_scheme=parsed.scheme
+                )
+            )
+
+        if not parsed.netloc:
+            raise TuneRequestValueError(
+                error_message="'{request_url}': scheme '{parsed_netloc}'".format(
+                    request_url=request_url, parsed_netloc=parsed.netloc
+                )
+            )
+
         self.logger.debug(
             "Request '{request_url}': Start: '{request_label}'".
             format(request_url=request_url, request_label=request_label)
         )
-
-        assert request_method
-        request_method = request_method.upper()
-        assert request_method in ['POST', 'GET', 'PUT']
-
-        assert request_url
-        parsed = urllib.parse.urlparse(request_url)
-        assert parsed
-        assert parsed.scheme
-        assert parsed.netloc
 
         timeout = None
 
@@ -441,7 +464,9 @@ class RequestMvIntegration(object):
 
         except requests.packages.urllib3.exceptions.ProtocolError as ex_req_urllib3_protocol:
             raise TuneRequestModuleError(
-                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_urllib3_protocol)),
+                error_message="Request: Exception: '{ex_name}'".format(
+                    ex_name=base_class_name(ex_req_urllib3_protocol)
+                ),
                 errors=ex_req_urllib3_protocol,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT
@@ -449,7 +474,9 @@ class RequestMvIntegration(object):
 
         except requests.packages.urllib3.exceptions.ReadTimeoutError as ex_req_urllib3_read_timeout:
             raise TuneRequestServiceError(
-                error_message="Request: Exception: '{ex_name}'".format(ex_name=base_class_name(ex_req_urllib3_read_timeout)),
+                error_message="Request: Exception: '{ex_name}'".format(
+                    ex_name=base_class_name(ex_req_urllib3_read_timeout)
+                ),
                 errors=ex_req_urllib3_read_timeout,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.GATEWAY_TIMEOUT
@@ -489,32 +516,40 @@ class RequestMvIntegration(object):
                         raise TuneRequestServiceError(**error_kwargs)
 
             # THIS BLOCK SHOULD NOT BE ACTUALLY ACCESSED. IF IT DOES LOOK INTO IT:
-            self.logger.error(
-                "Send Request : Unexpected RetryError occurred", extra={'request_curl': self.built_request_curl}
-            )
+            self.logger.error("Send Request: RetryError", extra={'request_curl': self.built_request_curl})
             raise TuneRequestModuleError(
-                error_message="Request: Exception: HTTPAdapter: Unexpected Retry Error",
+                error_message="Send Request: HTTPAdapter: RetryError",
                 errors=ex_req_adapter_retry,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_RETRY_EXHAUSTED,
             )
 
         except requests.exceptions.RequestException as ex_req_request:
+            self.logger.error(
+                "Send Request: RequestException: '{error_message}'".format(error_message=str(ex_req_request)),
+                extra={'request_curl': self.built_request_curl}
+            )
             raise TuneRequestModuleError(
-                error_message="Request: Exception: Request Error",
+                error_message="Send Request: RequestException: '{error_message}'".format(
+                    error_message=str(ex_req_request)
+                ),
                 errors=ex_req_request,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_REQUEST
             )
 
-        except TuneRequestBaseError:
-            raise
+        except TuneRequestBaseError as ex_req_base:
+            self.logger.error(
+                "Send Request: RequestBase: '{error_message}'".format(error_message=str(ex_req_base)),
+                extra={'request_curl': self.built_request_curl}
+            )
+            raise ex_req_base
 
         except Exception as ex:
             print_traceback(ex)
 
             raise TuneRequestModuleError(
-                error_message="Request: Exception: Unexpected",
+                error_message="Request: Exception: Unexpected: '{error_message}'".format(error_message=str(ex)),
                 errors=ex,
                 error_request_curl=self.built_request_curl,
                 error_code=TuneRequestErrorCodes.REQ_ERR_SOFTWARE

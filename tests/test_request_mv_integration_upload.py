@@ -12,9 +12,7 @@ from .resources.mockserver import run_server
 from requests_mv_integrations import (
     RequestMvIntegrationUpload,
 )
-from requests_mv_integrations.exceptions import (
-    TuneRequestBaseError,
-)
+from requests_mv_integrations.exceptions import (TuneRequestValueError)
 
 __all__ = [run_server]
 
@@ -31,44 +29,61 @@ def request_object():
 
 
 class TestRequestMvIntegrationUpload:
-    @pytest.mark.parametrize(
-        'url, file_path, message', (("url", "path", 'FileNotFound'), ("url", test_config_path, 'Invalid URL'),)
-    )
-    def test_request_upload_json_fail(self, request_object, url, file_path, message):
+    @pytest.mark.parametrize('upload_request_url, upload_data_file_path', (('url', 'path'), ('url', test_config_path),))
+    def test_request_upload_json_file_url_fail(self, request_object, upload_request_url, upload_data_file_path):
 
-        with pytest.raises(TuneRequestBaseError) as info:
+        with pytest.raises(AssertionError) as ex_assert:
             request_object.request_upload_json_file(
-                upload_request_url=url,
-                upload_data_file_path=file_path,
+                upload_request_url=upload_request_url,
+                upload_data_file_path=upload_data_file_path,
                 upload_data_file_size=1,
                 is_upload_gzip=None,
-                request_label="label"
+                request_label="test_request_upload_json_file_url_fail",
             )
 
-        assert message in str(info.value)
+        assert ex_assert
+
+    @pytest.mark.parametrize(
+        'upload_request_url, upload_data_file_path', ((test_url, 'path'), ('url', test_config_path),)
+    )
+    def test_request_upload_json_file_path_fail(self, request_object, upload_request_url, upload_data_file_path):
+
+        with pytest.raises(AssertionError) as ex_assert:
+            request_object.request_upload_json_file(
+                upload_request_url=upload_request_url,
+                upload_data_file_path=upload_data_file_path,
+                upload_data_file_size=1,
+                is_upload_gzip=None,
+                request_label="test_request_upload_json_file_path_fail",
+            )
+
+        assert ex_assert
 
     @pytest.mark.parametrize(
         'is_gzip, content_type', ((True, 'application/gzip'), (None, 'application/json; charset=utf8'),)
     )
-    def test_request_upload_json_pass(self, request_object, is_gzip, content_type, run_server):
-
+    def test_request_upload_json_file_pass(self, request_object, is_gzip, content_type, run_server):
         response = request_object.request_upload_json_file(
             upload_request_url=test_url,
             upload_data_file_path=test_config_path,
             upload_data_file_size=1,
             is_upload_gzip=is_gzip,
-            request_label="label"
+            request_label="test_request_upload_json_file_pass",
         )
 
         assert content_type in response.headers["Content-Type"]
 
-    @pytest.mark.parametrize('url, message, data', (("http", "Invalid URL", "data"),))
-    def test_request_upload_data_fail(self, request_object, url, message, data):
-        with pytest.raises(AssertionError) as ex:
-            request_object.request_upload_data(upload_request_url=url, upload_data=data, upload_data_size=1)
+    @pytest.mark.parametrize('upload_request_url, data', (('http', 'data'), ('www.example.com', 'data'),))
+    def test_request_upload_data_fail(self, request_object, upload_request_url, data):
+        with pytest.raises(TuneRequestValueError) as ex_assert:
+            request_object.request_upload_data(
+                upload_request_url=upload_request_url,
+                upload_data=data,
+                upload_data_size=1,
+                request_label="test_request_upload_data_fail",
+            )
 
-        assert ex
-        assert str(ex)
+        assert ex_assert
 
     @pytest.mark.parametrize('url, data', ((test_url, "text"),))
     def test_request_upload_data_pass(self, request_object, url, data, run_server):

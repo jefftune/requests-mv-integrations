@@ -3,6 +3,7 @@
 #  @copyright 2017 TUNE, Inc. (http://www.tune.com)
 #  @namespace requests_mv_integrations
 
+import os
 import logging
 import urllib
 
@@ -18,6 +19,7 @@ from requests_mv_integrations.errors import (
 from requests_mv_integrations.exceptions.custom import (
     TuneRequestBaseError,
     TuneRequestModuleError,
+    TuneRequestValueError,
 )
 from requests_mv_integrations.support import (
     base_class_name,
@@ -66,8 +68,8 @@ class RequestMvIntegrationUpload(object):
         upload_request_url,
         upload_data_file_path,
         upload_data_file_size,
-        is_upload_gzip,
-        request_label,
+        is_upload_gzip=False,
+        request_label=None,
         upload_timeout=None
     ):
         """
@@ -81,14 +83,43 @@ class RequestMvIntegrationUpload(object):
         :param upload_timeout:
         :return:
         """
+        if not upload_request_url or not isinstance(upload_request_url, str):
+            raise TuneRequestValueError(error_message="Missing 'upload_request_url'")
 
-        assert upload_request_url
         parsed = urllib.parse.urlparse(upload_request_url)
-        assert parsed
-        assert parsed.scheme
-        assert parsed.netloc
+        if not parsed:
+            raise TuneRequestValueError(
+                error_message="Unable to parse 'upload_request_url': '{upload_request_url}'".format(
+                    upload_request_url=upload_request_url
+                )
+            )
 
-        assert request_label
+        if not parsed.scheme:
+            raise TuneRequestValueError(
+                error_message="'{upload_request_url}': scheme '{parsed_scheme}'".format(
+                    upload_request_url=upload_request_url, parsed_scheme=parsed.scheme
+                )
+            )
+
+        if not parsed.netloc:
+            raise TuneRequestValueError(
+                error_message="'{upload_request_url}': scheme '{parsed_netloc}'".format(
+                    upload_request_url=upload_request_url, parsed_netloc=parsed.netloc
+                )
+            )
+
+        if not upload_data_file_path or not isinstance(upload_data_file_path, str):
+            raise TuneRequestValueError(error_message="Missing 'upload_data_file_path'")
+
+        if not os.path.exists(upload_data_file_path):
+            raise TuneRequestValueError(
+                error_message="Invalid 'upload_data_file_path': '{upload_data_file_path'}".format(
+                    upload_data_file_path=upload_data_file_path
+                )
+            )
+
+        if not upload_data_file_size or not isinstance(upload_data_file_size, int):
+            raise TuneRequestValueError(error_message="Missing 'upload_data_file_size'")
 
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
@@ -96,6 +127,9 @@ class RequestMvIntegrationUpload(object):
         upload_request_retry = {"timeout": 60, "tries": -1, "delay": 60}
 
         upload_request_headers = {'Content-Length': '{}'.format(upload_data_file_size)}
+
+        if is_upload_gzip is None:
+            is_upload_gzip = False
 
         if is_upload_gzip:
             upload_request_headers.update({'Content-Type': 'application/gzip'})
@@ -161,7 +195,14 @@ class RequestMvIntegrationUpload(object):
 
         return response
 
-    def request_upload_data(self, upload_request_url, upload_data, upload_data_size, upload_timeout=None):
+    def request_upload_data(
+        self,
+        upload_request_url,
+        upload_data,
+        upload_data_size,
+        upload_timeout=None,
+        request_label=None,
+    ):
         """
         Upload Data to requested URL.
 
@@ -171,17 +212,40 @@ class RequestMvIntegrationUpload(object):
         :param upload_timeout:
         :return:
         """
+        if not upload_request_url or not isinstance(upload_request_url, str):
+            raise TuneRequestValueError(error_message="Missing 'upload_request_url'")
+
+        parsed = urllib.parse.urlparse(upload_request_url)
+        if not parsed:
+            raise TuneRequestValueError(
+                error_message="Unable to parse 'upload_request_url': '{upload_request_url}'".format(
+                    upload_request_url=upload_request_url
+                )
+            )
+
+        if not parsed.scheme:
+            raise TuneRequestValueError(
+                error_message="'{upload_request_url}': scheme '{parsed_scheme}'".format(
+                    upload_request_url=upload_request_url, parsed_scheme=parsed.scheme
+                )
+            )
+
+        if not parsed.netloc:
+            raise TuneRequestValueError(
+                error_message="'{upload_request_url}': scheme '{parsed_netloc}'".format(
+                    upload_request_url=upload_request_url, parsed_netloc=parsed.netloc
+                )
+            )
+
+        request_label = "Upload Data to URL" if request_label is None or not isinstance(
+            request_label, str
+        ) else request_label
+
         log.info(
             "Request Upload JSON Data: Start",
             extra={'upload_data_size': upload_data_size,
                    'upload_request_url': upload_request_url}
         )
-
-        assert upload_request_url
-        parsed = urllib.parse.urlparse(upload_request_url)
-        assert parsed
-        assert parsed.scheme
-        assert parsed.netloc
 
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
@@ -210,7 +274,7 @@ class RequestMvIntegrationUpload(object):
                 request_headers=request_headers,
                 allow_redirects=False,
                 build_request_curl=False,
-                request_label="Upload Data to URL"
+                request_label=request_label
             )
         except TuneRequestBaseError as tmv_ex:
             tmv_ex_extra = tmv_ex.to_dict()

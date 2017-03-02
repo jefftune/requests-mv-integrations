@@ -24,7 +24,7 @@ class TuneRequestModuleError(TuneRequestBaseError):
 
 
 class TuneRequestClientGoneError(TuneRequestModuleError):
-    """Request Mv Integration: Value error"""
+    """Request Mv Integration: HTTP Error 410 Gone"""
 
     def __init__(self, **kwargs):
         error_code = kwargs.pop('error_code', None) or \
@@ -33,7 +33,7 @@ class TuneRequestClientGoneError(TuneRequestModuleError):
 
 
 class TuneRequestValueError(TuneRequestModuleError):
-    """Request Mv Integration: Value error"""
+    """Request Mv Integration: Error 601 Invalid or missing argument provided discovered in this module."""
 
     def __init__(self, **kwargs):
         error_code = kwargs.pop('error_code', None) or \
@@ -42,7 +42,7 @@ class TuneRequestValueError(TuneRequestModuleError):
 
 
 class TuneRequestAuthenticationError(TuneRequestModuleError):
-    """Request Mv Integration: Authentication error"""
+    """Request Mv Integration: Error 611 Authentication"""
 
     def __init__(self, **kwargs):
         error_code = kwargs.pop('error_code', None) or \
