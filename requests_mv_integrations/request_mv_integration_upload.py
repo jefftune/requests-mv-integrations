@@ -168,8 +168,8 @@ class RequestMvIntegrationUpload(object):
         :param upload_timeout:
         :return:
         """
-        if request_label is None:
-            request_label = 'Request Upload JSON Data'
+        _request_label = 'Request Upload JSON File'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.info(
             '{}: Start'.format(request_label),
@@ -239,8 +239,8 @@ class RequestMvIntegrationUpload(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = "Request Retry: Upload Exception Func"
+        _request_label = 'Request Upload Exception Func'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         error_exception = base_class_name(excp)
         error_details = get_exception_message(excp)

@@ -145,8 +145,8 @@ class RequestMvIntegrationDownload(object):
             Generator containing CSV data by rows in JSON dictionary format.
 
         """
-        if request_label is None:
-            request_label = 'Request Download CSV File'
+        _request_label = 'Request Download CSV File'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.debug(
             '{}: Start'.format(request_label),
@@ -368,8 +368,8 @@ class RequestMvIntegrationDownload(object):
             Generator containing JSON data by rows in JSON dictionary format.
 
         """
-        if request_label is None:
-            request_label = 'Request Download JSON File'
+        _request_label = 'Request Download JSON File'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.info(
             '{}: Start'.format(request_label),
@@ -690,8 +690,8 @@ class RequestMvIntegrationDownload(object):
         encoding_write=None,
         decode_unicode=False,
     ):
-        if request_label is None:
-            request_label = 'Download CSV'
+        _request_label = 'Download CSV'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.debug('{}: Start'.format(request_label))
 
@@ -868,8 +868,8 @@ class RequestMvIntegrationDownload(object):
         Returns:
 
         """
-        if request_label is None:
-            request_label = 'Stream CSV'
+        _request_label = 'Stream CSV'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.info('{}: Start'.format(request_label), extra={'report_url': request_url})
 
