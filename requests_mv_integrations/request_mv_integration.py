@@ -609,7 +609,12 @@ class RequestMvIntegration(object):
             _tries -= 1
 
             to_raise_exception, to_return_response = self.try_send_request(
-                _attempts, _tries, request_func, request_retry_func, request_url
+                _attempts,
+                _tries,
+                request_func,
+                request_retry_func,
+                request_url,
+                request_label=request_label,
             )
 
             if to_raise_exception:
@@ -651,8 +656,8 @@ class RequestMvIntegration(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = 'Try Send Request'
+        _request_label = 'Try Send Request'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         to_raise_exception = None
         to_return_response = None
@@ -675,15 +680,15 @@ class RequestMvIntegration(object):
                 )
 
         except tuple(self.request_retry_excps) as retry_ex:
-            if not self.is_retry_retry_ex(tries, request_url, retry_ex):
+            if not self.is_retry_retry_ex(tries, request_url, retry_ex, request_label=request_label):
                 to_raise_exception = retry_ex
 
         except TuneRequestBaseError as tmv_ex:
-            if not self.is_retry_non_retry_ex(tries, tmv_ex):
+            if not self.is_retry_non_retry_ex(tries, tmv_ex, request_label=request_label):
                 to_raise_exception = tmv_ex
 
         except Exception as ex:
-            is_retry, raised_exception = self.is_retry_non_tune_ex(tries, ex, request_url)
+            is_retry, raised_exception = self.is_retry_non_tune_ex(tries, ex, request_url, request_label=request_label)
             if not is_retry:
                 to_raise_exception = raised_exception
 
@@ -718,8 +723,9 @@ class RequestMvIntegration(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = 'Is Retry Non-TUNE Exception'
+        _request_label = 'Is Retry Non-TUNE Exception'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+
         is_retry = True
         raised_exception = None
         error_exception = ex
@@ -761,8 +767,9 @@ class RequestMvIntegration(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = 'Is Retry Non-Retry Exception'
+        _request_label = 'Is Retry Non-Retry Exception'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+
         is_retry = True
         error_exception = tmv_ex
         tmv_ex_extra = tmv_ex.to_dict()
@@ -817,8 +824,9 @@ class RequestMvIntegration(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = 'Is Retry Retry Exception'
+        _request_label = 'Is Retry Retry Exception'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+
         self.logger.warning(
             '{}: Expected: {}: Retry Candidate'.format(request_label, base_class_name(retry_ex)),
             extra={
@@ -844,8 +852,9 @@ class RequestMvIntegration(object):
         :param request_label:
         :return:
         """
-        if request_label is None:
-            request_label = 'Is Return Response'
+        _request_label = 'Is Return Response'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+
         _is_return_response = False
         self.logger.debug(
             '{}: Checking'.format(request_label), extra={

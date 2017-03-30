@@ -523,10 +523,10 @@ class TestRequestMvIntegration:
         to_raise_exception, to_return_response = request_mv_integration_object.try_send_request(
             attempts=attempts,
             tries=tries,
-            request_label=request_label,
             request_func=mock_request_func,
             request_retry_func=request_retry_func,
             request_url=request_url,
+            request_label=request_label,
         )
         # Can't have a result of both throwing an exception and returning a valid response
         assert (to_raise_exception is None or to_return_response is None)
