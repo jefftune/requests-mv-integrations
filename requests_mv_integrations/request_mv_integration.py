@@ -1116,8 +1116,7 @@ class RequestMvIntegration(object):
                 if error_response_details and \
                         isinstance(error_response_details, str) and \
                         len(error_response_details) > 100:
-                    extra_error['response_details'] = \
-                        error_response_details[:100] + ' ...'
+                    extra_error['response_details'] = error_response_details[:100] + ' ...'
 
             if self.built_request_curl and \
                     'error_request_curl' not in extra_error:

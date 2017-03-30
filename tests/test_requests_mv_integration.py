@@ -383,7 +383,7 @@ class TestRequestMvIntegration:
                 tested_http_response, ex.error_code
             )
 
-    def test_request_raised_exceptions_none(self, request_mv_integration_object):
+    def test_request_raised_exceptions_method_none(self, request_mv_integration_object):
         """
         Test RequestMvIntegration.request() exception handling, my mocking the call
         to RequestMvIntegration._request_retry()
@@ -394,6 +394,23 @@ class TestRequestMvIntegration:
         try:
             req.request(
                 request_method=None,
+                request_url=None,
+            )
+        except Exception as e:
+            assert (isinstance(e, TuneRequestValueError))
+            assert (e.error_code == TuneRequestErrorCodes.REQ_ERR_ARGUMENT)
+
+    def test_request_raised_exceptions_url_none(self, request_mv_integration_object):
+        """
+        Test RequestMvIntegration.request() exception handling, my mocking the call
+        to RequestMvIntegration._request_retry()
+        :param request_mv_integration_object: An instance of RequestMvIntegration.
+        """
+
+        req = request_mv_integration_object
+        try:
+            req.request(
+                request_method='GET',
                 request_url=None,
             )
         except Exception as e:
