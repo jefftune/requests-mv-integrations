@@ -670,7 +670,7 @@ class RequestMvIntegration(object):
                     error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_VALUE
                 )
 
-            if self.is_return_response(request_retry_func, request_url, response):
+            if self.is_return_response(request_retry_func, request_url, response, request_label=request_label):
                 to_return_response = response
             else:
                 self.logger.debug(
