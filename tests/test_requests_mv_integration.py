@@ -358,8 +358,8 @@ class TestRequestMvIntegration:
         monkeypatch.setattr(req, '_request_retry', mock_request_retry)
         try:
             req.request(
-                request_method="Doesn't matter",
-                request_url="Doesn't matter",
+                request_method='Does not matter',
+                request_url='Does not matter',
             )
         except Exception as e:
             assert (isinstance(e, mv_integration_error))
@@ -377,10 +377,11 @@ class TestRequestMvIntegration:
         :return:
         """
         try:
-            request_mv_integration_object.request('GET', "http://localhost:8998/status/" + str(tested_http_response))
+            request_mv_integration_object.request('GET', 'http://localhost:8998/status/' + str(tested_http_response))
         except Exception as ex:
-            assert ex.error_code == tested_http_response, "Expected exit_code same as mocked http response code: {}.  got: {}"\
-                .format(tested_http_response, ex.error_code)
+            assert ex.error_code == tested_http_response, "Expected: {}, Actual: {}".format(
+                tested_http_response, ex.error_code
+            )
 
     def test_request_raised_exceptions_none(self, request_mv_integration_object):
         """
@@ -439,7 +440,7 @@ class TestRequestMvIntegration:
         request_mv_integration_object,
         monkeypatch,
     ):
-        def mock_try_send_request(_attempts, _tries, request_func, request_label, request_retry_func, request_url):
+        def mock_try_send_request(_attempts, _tries, request_func, request_retry_func, request_url, request_label=None):
             if exception_type_name in exceptions:
                 all_exception_type_exceptions = exceptions[exception_type_name]
                 if error_code is not None:
@@ -492,8 +493,8 @@ class TestRequestMvIntegration:
     ):
         def mock_request_func():
             assert (
-                exception_thrown_by_request_func is not None or response_type is not None and
-                response_type in responses_dict
+                exception_thrown_by_request_func is not None or
+                response_type is not None and response_type in responses_dict
             )
             if exception_thrown_by_request_func is not None:
                 raise exception_thrown_by_request_func
@@ -503,12 +504,12 @@ class TestRequestMvIntegration:
         request_mv_integration_object.request_retry_excps_func = request_retry_excps_func
 
         to_raise_exception, to_return_response = request_mv_integration_object.try_send_request(
-            attempts,
-            tries,
-            mock_request_func,
-            request_label,
-            request_retry_func,
-            request_url,
+            attempts=attempts,
+            tries=tries,
+            request_label=request_label,
+            request_func=mock_request_func,
+            request_retry_func=request_retry_func,
+            request_url=request_url,
         )
         # Can't have a result of both throwing an exception and returning a valid response
         assert (to_raise_exception is None or to_return_response is None)

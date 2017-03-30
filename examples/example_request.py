@@ -32,7 +32,7 @@ log.info("Start")
 
 result = \
     tune_requests_mv_intgs.request(
-        request_method="GET",
+        request_method='GET',
         request_url=URL_TUNE_MAT_API_COUNTRIES,
         request_params=None,
         request_retry=None,

@@ -176,7 +176,8 @@ def validate_json_response(
 
                 raise TuneRequestModuleError(
                     error_message="Content-Type: Expected: '{expected}', Actual: '{actual}'".format(
-                        expected=response_content_type_expected, actual=response_content_type,
+                        expected=response_content_type_expected,
+                        actual=response_content_type,
                     ),
                     errors=response_content_html_lines,
                     error_request_curl=request_curl,
@@ -185,7 +186,8 @@ def validate_json_response(
             else:
                 raise TuneRequestModuleError(
                     error_message="Content-Type: Expected: '{expected}', Actual: '{actual}'".format(
-                        expected=response_content_type_expected, actual=response_content_type,
+                        expected=response_content_type_expected,
+                        actual=response_content_type,
                     ),
                     error_request_curl=request_curl,
                     error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED
@@ -203,7 +205,10 @@ def validate_json_response(
         'raise_ex_if_not_json_response': raise_ex_if_not_json_response
     })
 
-    log.debug('{request_label}: Success: JSON'.format(request_label=request_label), extra=response_extra,)
+    log.debug(
+        '{request_label}: Success: JSON'.format(request_label=request_label),
+        extra=response_extra,
+    )
 
     return json_response
 
