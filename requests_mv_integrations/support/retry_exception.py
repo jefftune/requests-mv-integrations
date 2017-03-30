@@ -54,10 +54,8 @@ def mv_request_retry_excps_func(excp, request_label=None):
             }
         )
 
-    if isinstance(excp, TuneRequestBaseError) and \
-                    excp.error_code == TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT:
-        if error_details.find('RemoteDisconnected') >= 0 or \
-                        error_details.find('ConnectionResetError') >= 0:
+    if isinstance(excp, requests.exceptions.ConnectionError):
+        if error_details.find('RemoteDisconnected') >= 0 or error_details.find('ConnectionResetError') >= 0:
             log.debug(
                 '{}: Retry'.format(request_label),
                 extra={
@@ -67,9 +65,8 @@ def mv_request_retry_excps_func(excp, request_label=None):
             )
             return True
 
-    if isinstance(excp, requests.exceptions.ConnectionError):
-        if error_details.find('RemoteDisconnected') >= 0 or \
-                        error_details.find('ConnectionResetError') >= 0:
+    if isinstance(excp, TuneRequestBaseError) and excp.error_code == TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT:
+        if error_details.find('RemoteDisconnected') >= 0 or error_details.find('ConnectionResetError') >= 0:
             log.debug(
                 '{}: Retry'.format(request_label),
                 extra={
