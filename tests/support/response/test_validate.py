@@ -16,8 +16,11 @@ response_ok.status_code = codes.ok
 response_bad = Response()
 response_bad.status_code = codes.bad
 
-_test_validate_response_input_output = [('response_ok', True), ('response_bad', False),
-                                        ('response_ok_with_no_text', True)]
+_test_validate_response_input_output = [
+    ('response_ok', True),
+    ('response_bad', False),
+    ('response_ok_with_no_text', True),
+]
 
 _test_validate_json_response_input_output = [
     ('response_ok_no_headers', TuneRequestModuleError, TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED),
