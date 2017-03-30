@@ -4,7 +4,6 @@
 #  @namespace requests_mv_integrations
 
 import logging
-import requests
 from logging_mv_integrations import (TuneLoggingFormat)
 
 from requests_mv_integrations import (
@@ -22,6 +21,7 @@ from requests_mv_integrations.exceptions.custom import (
 )
 from requests_mv_integrations.support import (
     base_class_name,
+    mv_request_retry_excps_func,
     python_check_version,
     REQUEST_RETRY_EXCPS,
     REQUEST_RETRY_HTTP_STATUS_CODES,
@@ -116,7 +116,7 @@ class RequestMvIntegrationUpload(object):
                     request_headers=upload_request_headers,
                     request_retry_excps=request_retry_excps,
                     request_retry_http_status_codes=request_retry_http_status_codes,
-                    request_retry_excps_func=self._upload_request_retry_excps_func,
+                    request_retry_excps_func=mv_request_retry_excps_func,
                     allow_redirects=False,
                     build_request_curl=False,
                     request_label=request_label
@@ -202,7 +202,7 @@ class RequestMvIntegrationUpload(object):
                 request_retry=upload_request_retry,
                 request_retry_excps=request_retry_excps,
                 request_retry_http_status_codes=request_retry_http_status_codes,
-                request_retry_excps_func=self._upload_request_retry_excps_func,
+                request_retry_excps_func=mv_request_retry_excps_func,
                 request_headers=request_headers,
                 allow_redirects=False,
                 build_request_curl=False,
@@ -231,67 +231,3 @@ class RequestMvIntegrationUpload(object):
 
         log.info('{}: Finished'.format(request_label))
         return response
-
-    def _upload_request_retry_excps_func(self, excp, request_label=None):
-        """Upload Request Retry Exception Function
-    
-        :param excp:
-        :param request_label:
-        :return:
-        """
-        _request_label = 'Request Upload Exception'
-        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
-
-        error_exception = base_class_name(excp)
-        error_details = get_exception_message(excp)
-
-        if isinstance(excp, TuneRequestBaseError):
-            log.debug(
-                '{}: Expected'.format(request_label),
-                extra={
-                    'error_exception': error_exception,
-                    'error_details': error_details,
-                }
-            )
-        else:
-            log.debug(
-                '{}: Unexpected'.format(request_label),
-                extra={
-                    'error_exception': error_exception,
-                    'error_details': error_details,
-                }
-            )
-
-        if isinstance(excp, TuneRequestBaseError) and \
-                excp.error_code == TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT:
-            if error_details.find('RemoteDisconnected') >= 0 or \
-                    error_details.find('ConnectionResetError') >= 0:
-                log.debug(
-                    '{}: Retry'.format(request_label),
-                    extra={
-                        'error_exception': error_exception,
-                        'error_details': error_details,
-                    }
-                )
-                return True
-
-        if isinstance(excp, requests.exceptions.ConnectionError):
-            if error_details.find('RemoteDisconnected') >= 0 or \
-                    error_details.find('ConnectionResetError') >= 0:
-                log.debug(
-                    '{}: Retry'.format(request_label),
-                    extra={
-                        'error_exception': error_exception,
-                        'error_details': error_details,
-                    }
-                )
-                return True
-
-        log.debug(
-            '{}: No Retry'.format(request_label),
-            extra={
-                'error_exception': error_exception,
-                'error_details': error_details,
-            }
-        )
-        return False

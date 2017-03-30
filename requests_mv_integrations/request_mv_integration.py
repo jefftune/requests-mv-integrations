@@ -53,6 +53,7 @@ from requests_mv_integrations.support import (
     build_response_error_details,
     command_line_request_curl,
     env_usage,
+    mv_request_retry_excps_func,
     python_check_version,
 )
 
@@ -347,6 +348,8 @@ class RequestMvIntegration(object):
 
         if request_retry_excps_func is None:
             request_retry_excps_func = self.request_retry_excps_func
+            if request_retry_excps_func is None:
+                request_retry_excps_func = mv_request_retry_excps_func
 
         if request_retry_http_status_codes is not None:
             self.request_retry_http_status_codes = request_retry_http_status_codes
@@ -779,7 +782,8 @@ class RequestMvIntegration(object):
             'request_label': request_label
         })
         self.logger.warning(
-            '{}: Failed: {}'.format(request_label, get_exception_message(error_exception)), extra=tmv_ex.to_dict()
+            '{}: Failed: {}'.format(request_label, get_exception_message(error_exception)),
+            extra=tmv_ex.to_dict(),
         )
         if not self.request_retry_excps_func or \
                 not self.request_retry_excps_func(tmv_ex, request_label):

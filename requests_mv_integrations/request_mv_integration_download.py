@@ -28,11 +28,11 @@ from requests_mv_integrations.support import (
     bytes_to_human,
     csv_skip_last_row,
     detect_bom,
+    env_usage,
     handle_json_decode_error,
     python_check_version,
     remove_bom,
     validate_response,
-    env_usage,
 )
 from requests_mv_integrations.support.curl import command_line_request_curl
 from .request_mv_integration import (RequestMvIntegration)
@@ -306,8 +306,8 @@ class RequestMvIntegrationDownload(object):
                 '{}: Content Header'.format(request_label),
                 extra={'csv_header': csv_header_hr},
             )
-            csv_fieldnames = csv_header if csv_header else csv_header_actual
 
+            csv_fieldnames = csv_header if csv_header else csv_header_actual
             csv_dict_reader = csv.DictReader(csv_file_r, fieldnames=csv_fieldnames, delimiter=csv_delimiter)
 
             if skip_last_row:
