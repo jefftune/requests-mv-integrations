@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #  @copyright 2017 TUNE, Inc. (http://www.tune.com)
-#  @namespace requests_mv_integration
 
 import pytest
 import requests
@@ -26,6 +25,7 @@ from requests.exceptions import ReadTimeout
 from pyhttpstatus_utils import status_dicts, http_status_code_to_type
 
 from .resources.mockserver import run_server
+
 assert run_server  # Silence Pyflakes
 
 request_raised_exceptions_test_object = (

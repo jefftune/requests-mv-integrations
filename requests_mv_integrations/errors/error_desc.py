@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #  @copyright 2017 TUNE, Inc. (http://www.tune.com)
-#  @namespace requests_mv_integrations.errors
-"""
-TUNE Mv-Integration Exit Codes
-"""
 
 from pyhttpstatus_utils.status_dicts import description as http_status_desc
 from pyhttpstatus_utils.status_dicts import name as http_status_codes

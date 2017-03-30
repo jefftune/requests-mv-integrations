@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #  @copyright 2017 TUNE, Inc. (http://www.tune.com)
-#  @namespace requests_mv_integrations
 
 import logging
 from logging_mv_integrations import (TuneLoggingFormat)
@@ -121,13 +120,11 @@ class RequestMvIntegrationUpload(object):
                     build_request_curl=False,
                     request_label=request_label
                 )
-        except TuneRequestBaseError as tmv_ex:
 
+        except TuneRequestBaseError as tmv_ex:
             tmv_ex_extra = tmv_ex.to_dict()
             tmv_ex_extra.update({'error_exception': base_class_name(tmv_ex)})
-
             log.error('{}: Failed'.format(request_label), extra=tmv_ex_extra)
-
             raise
 
         except Exception as ex:

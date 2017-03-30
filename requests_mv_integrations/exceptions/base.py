@@ -1,22 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #  @copyright 2017 TUNE, Inc. (http://www.tune.com)
-#  @namespace requests_mv_integrations
-"""
-Tune Requests Error
-"""
 
 import six
-
-# from pprintpp import pprint
-
 from requests_mv_integrations import (__title__)
 from requests_mv_integrations.errors import (TuneRequestErrorCodes)
-
 from requests_mv_integrations.errors import error_desc as tune_request_error_desc
 from requests_mv_integrations.errors import error_name as tune_request_error_name
-
 from safe_cast import safe_str
+
+# from pprintpp import pprint
 
 
 # @brief TUNE Requests Base Exception
