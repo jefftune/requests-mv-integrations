@@ -3,6 +3,10 @@
 Release History
 ===============
 
+0.04.8 (2017-03-30)
+-------------------
+- Retry exception function.
+
 0.04.6 (2017-03-28)
 -------------------
 - logger-mv-integrations version 0.1.2
