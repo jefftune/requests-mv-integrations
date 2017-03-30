@@ -78,11 +78,11 @@ class RequestMvIntegrationUpload(object):
         :param upload_timeout:
         :return:
         """
+        _request_label = 'Request Upload JSON File'
+        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
-
-        if request_label is None:
-            request_label = 'Request Upload JSON File'
 
         upload_request_retry = {"timeout": 60, "tries": -1, "delay": 60}
         upload_request_headers = {'Content-Length': '{}'.format(upload_data_file_size)}
@@ -168,7 +168,7 @@ class RequestMvIntegrationUpload(object):
         :param upload_timeout:
         :return:
         """
-        _request_label = 'Request Upload JSON File'
+        _request_label = 'Request Upload Data'
         request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         log.info(
@@ -239,7 +239,7 @@ class RequestMvIntegrationUpload(object):
         :param request_label:
         :return:
         """
-        _request_label = 'Request Upload Exception Func'
+        _request_label = 'Request Upload Exception'
         request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
 
         error_exception = base_class_name(excp)
