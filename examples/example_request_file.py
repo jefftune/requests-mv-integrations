@@ -41,9 +41,9 @@ result = \
 
 request_download.logger.info("Completed".upper(), extra=vars(result))
 
-pprint(f"Logger file path: {request_download.logger.logging_file}")
+pprint(f"Logger file path: {request_download.logger.logger_path}")
 
-logger_fp = open(request_download.logger.logging_file, 'r')
+logger_fp = open(request_download.logger.logger_path, 'r')
 pprint(logger_fp.readlines())
 
 pprint(request_download.logger.getLevelName())
