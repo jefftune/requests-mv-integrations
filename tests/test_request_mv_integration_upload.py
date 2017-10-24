@@ -45,7 +45,7 @@ class TestRequestMvIntegrationUpload:
 
         assert message in str(info.value)
 
-    # TODO: Failing: See MVC-59
+    # TODO: Failing: See MVC-59 `make test`
     # @pytest.mark.parametrize(
     #     'is_gzip, content_type', ((True, 'application/gzip'), (None, 'application/json; charset=utf8'),)
     # )
@@ -71,7 +71,7 @@ class TestRequestMvIntegrationUpload:
             )
         assert message in str(info.value)
 
-    # TODO: Failing: See MVC-59
+    # TODO: Failing: See MVC-59 `make test`
     # @pytest.mark.parametrize('url, data', ((test_url, "text"),))
     # def test_request_upload_data_pass(self, request_object, url, data, run_server):
     #     response = request_object.request_upload_data(
@@ -82,7 +82,7 @@ class TestRequestMvIntegrationUpload:
     #     )
     #     assert 'application/json; charset=utf8' in response.headers["Content-Type"]
 
-    # TODO: Failing: See MVC-59
+    # TODO: Failing: See MVC-59: Fails during `make coverage`
     # @pytest.mark.parametrize('url, data', ((test_url, "text"),))
     # def test_request_upload_data_timeout_pass(self, request_object, url, data, run_server):
     #     response = request_object.request_upload_data(
