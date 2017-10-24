@@ -7,7 +7,6 @@ import logging
 from pprintpp import pprint
 from requests_mv_integrations import (
     RequestMvIntegrationDownload,
-    __version__,
 )
 from requests_mv_integrations.support import (
     HEADER_CONTENT_TYPE_APP_JSON
