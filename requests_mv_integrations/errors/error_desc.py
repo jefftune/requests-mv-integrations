@@ -58,7 +58,7 @@ def error_name(error_code, return_bool=False):
 
     """
     if error_code is None or not isinstance(error_code, int):
-        return "Error Code: Invalid Type: {}".format(error_code)
+        return f"Error Code: Invalid Type: {error_code}"
 
     exit_code_name_ = http_status_codes.get(error_code, None)
     if exit_code_name_ is not None:
@@ -68,7 +68,7 @@ def error_name(error_code, return_bool=False):
     if exit_code_name_ is not None:
         return exit_code_name_
 
-    return False if return_bool else "Error Code: Undefined: {}".format(error_code)
+    return False if return_bool else f"Error Code: Undefined: {error_code}"
 
 
 def error_desc(error_code, return_bool=False):
@@ -81,7 +81,7 @@ def error_desc(error_code, return_bool=False):
 
     """
     if error_code is None or not isinstance(error_code, int):
-        return "Error Code: Invalid Type: {}".format(error_code)
+        return f"Error Code: Invalid Type: {error_code}"
 
     exit_code_description_ = http_status_desc.get(error_code, None)
     if exit_code_description_ is not None:
@@ -91,4 +91,4 @@ def error_desc(error_code, return_bool=False):
     if exit_code_description_ is not None:
         return exit_code_description_
 
-    return False if return_bool else "Error Code: Undefined: {}".format(error_code)
+    return False if return_bool else f"Error Code: Undefined: {error_code}"

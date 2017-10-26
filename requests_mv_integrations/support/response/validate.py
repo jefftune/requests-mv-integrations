@@ -61,7 +61,7 @@ def validate_response(
         request_label = 'Validate Response'
 
     if not response:
-        error_message = '{request_label}: Failed: None'.format(request_label=request_label)
+        error_message = f'{request_label}: Failed: None'
         log.error(error_message, extra=response_extra)
 
         raise TuneRequestModuleError(
@@ -70,7 +70,7 @@ def validate_response(
             error_code=TuneRequestErrorCodes.REQ_ERR_SOFTWARE
         )
 
-    log.debug('{request_label}: Defined'.format(request_label=request_label), extra=response_extra)
+    log.debug(f'{request_label}: Defined', extra=response_extra)
 
     response_extra.update({'http_status_code': response.status_code})
 
@@ -105,7 +105,7 @@ def validate_response(
             response_extra.update({'Transfer-Encoding': response_transfer_encoding})
 
     if not is_http_status_successful(http_status_code=response.status_code):
-        error_message = '{request_label}: Failed'.format(request_label=request_label)
+        error_message = f'{request_label}: Failed'
         log.error(error_message, extra=response_extra)
 
         raise TuneRequestModuleError(
@@ -114,7 +114,7 @@ def validate_response(
             error_code=TuneRequestErrorCodes.REQ_ERR_SOFTWARE
         )
 
-    log.debug('{request_label}: Success'.format(request_label=request_label), extra=response_extra)
+    log.debug(f'{request_label}: Success', extra=response_extra)
 
 
 def validate_json_response(
@@ -174,20 +174,14 @@ def validate_json_response(
                     )
 
                 raise TuneRequestModuleError(
-                    error_message="Content-Type: Expected: '{expected}', Actual: '{actual}'".format(
-                        expected=response_content_type_expected,
-                        actual=response_content_type,
-                    ),
+                    error_message=f"Content-Type: Expected: '{response_content_type_expected}', Actual: '{response_content_type}'",
                     errors=response_content_html_lines,
                     error_request_curl=request_curl,
                     error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED
                 )
             else:
                 raise TuneRequestModuleError(
-                    error_message="Content-Type: Expected: '{expected}', Actual: '{actual}'".format(
-                        expected=response_content_type_expected,
-                        actual=response_content_type,
-                    ),
+                    error_message=f"Content-Type: Expected: '{response_content_type_expected}', Actual: '{response_content_type}'",
                     error_request_curl=request_curl,
                     error_code=TuneRequestErrorCodes.REQ_ERR_UNEXPECTED_CONTENT_TYPE_RETURNED
                 )
@@ -205,7 +199,7 @@ def validate_json_response(
     })
 
     log.debug(
-        '{request_label}: Success: JSON'.format(request_label=request_label),
+        f'{request_label}: Success: JSON',
         extra=response_extra,
     )
 
@@ -307,7 +301,7 @@ def build_response_error_details(request_label, request_url, response):
     http_status_desc = \
         http_status_code_to_desc(http_status_code)
 
-    response_status = "{}: {}: {}".format(http_status_code, http_status_type, http_status_desc)
+    response_status = f"{http_status_code}: {http_status_type}: {http_status_desc}"
 
     response_error_details = {
         'request_url': request_url,

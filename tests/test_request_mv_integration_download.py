@@ -28,9 +28,9 @@ def request_mv_integration_download_object():
 
 
 current_path = os.path.dirname(os.path.realpath(__file__))
-test_csv_download_url = "http://localhost:{}/download.csv".format(HTTP_SERVER_PORT)
-test_json_download_url = "http://localhost:{}/download.json".format(HTTP_SERVER_PORT)
-test_csv_stream_url = "http://localhost:{}/stream.csv".format(HTTP_SERVER_PORT)
+test_csv_download_url = f"http://localhost:{HTTP_SERVER_PORT}/download.csv"
+test_json_download_url = f"http://localhost:{HTTP_SERVER_PORT}/download.json"
+test_csv_stream_url = f"http://localhost:{HTTP_SERVER_PORT}/stream.csv"
 TMP_CSV_FILE_NAME = 'csv_mock.csv'
 TMP_JSON_FILE_NAME = 'json_mock.json'
 TMP_DIRECTORY = tmpdir

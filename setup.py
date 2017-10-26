@@ -59,6 +59,7 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: Implementation :: PyPy'
 ]
 
@@ -75,7 +76,7 @@ setup(
     author='TUNE Inc., TuneLab',
     author_email='jefft@tune.com',
     url='https://github.com/TuneLab/requests-mv-integrations',
-    download_url='https://github.com/TuneLab/requests-mv-integrations/archive/v{0}.tar.gz'.format(version),
+    download_url=f'https://github.com/TuneLab/requests-mv-integrations/archive/v{version}.tar.gz',
     keywords=["tune", "multiverse", "requests"],
     license='MIT License',
     zip_safe=False,

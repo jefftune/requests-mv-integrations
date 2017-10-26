@@ -56,7 +56,7 @@ class TuneRequest(object):
             return self.session.request(method=request_method, url=request_url, **kwargs)
         except Exception as ex:
             log.warning(
-                "Session Request: Failed: {}".format(get_exception_message(ex)),
+                f"Session Request: Failed: {get_exception_message(ex)}",
                 extra=extra_session_request,
             )
             raise

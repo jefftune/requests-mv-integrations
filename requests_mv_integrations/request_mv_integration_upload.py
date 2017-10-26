@@ -84,13 +84,13 @@ class RequestMvIntegrationUpload(object):
         :return:
         """
         _request_label = 'Request Upload JSON File'
-        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+        request_label = f'{request_label}: {request_label}' if request_label is not None else _request_label
 
         request_retry_excps = REQUEST_RETRY_EXCPS
         request_retry_http_status_codes = REQUEST_RETRY_HTTP_STATUS_CODES
 
         upload_request_retry = {"timeout": 60, "tries": -1, "delay": 60}
-        upload_request_headers = {'Content-Length': '{}'.format(upload_data_file_size)}
+        upload_request_headers = {'Content-Length': f'{upload_data_file_size}'}
 
         if is_upload_gzip:
             upload_request_headers.update({'Content-Type': 'application/gzip'})
@@ -108,7 +108,7 @@ class RequestMvIntegrationUpload(object):
             'upload_request_headers': upload_request_headers
         }
 
-        log.info('{}: Start'.format(request_label), extra=upload_extra)
+        log.info(f'{request_label}: Start', extra=upload_extra)
 
         try:
             with open(upload_data_file_path, 'rb') as upload_fp:
@@ -130,29 +130,27 @@ class RequestMvIntegrationUpload(object):
         except TuneRequestBaseError as tmv_ex:
             tmv_ex_extra = tmv_ex.to_dict()
             tmv_ex_extra.update({'error_exception': base_class_name(tmv_ex)})
-            log.error('{}: Failed'.format(request_label), extra=tmv_ex_extra)
+            log.error(f'{request_label}: Failed', extra=tmv_ex_extra)
             raise
 
         except Exception as ex:
             print_traceback(ex)
 
             log.error(
-                '{}: Failed: Unexpected'.format(request_label),
-                extra={'error_exception': base_class_name(ex),
-                       'error_details': get_exception_message(ex)}
+                f'{request_label}: Failed: Unexpected',
+                extra={
+                    'error_exception': base_class_name(ex),
+                    'error_details': get_exception_message(ex)
+                }
             )
 
             raise TuneRequestModuleError(
-                error_message='{}: Failed: Unexpected: {}: {}'.format(
-                    request_label,
-                    base_class_name(ex),
-                    get_exception_message(ex),
-                ),
+                error_message=f'{request_label}: Failed: Unexpected: {base_class_name(ex)}: {get_exception_message(ex)}',
                 errors=ex,
                 error_code=TuneRequestErrorCodes.REQ_ERR_UPLOAD_DATA
             )
 
-        log.info('{}: Finished'.format(request_label))
+        log.info(f'{request_label}: Finished')
         return response
 
     def request_upload_data(
@@ -172,10 +170,10 @@ class RequestMvIntegrationUpload(object):
         :return:
         """
         _request_label = 'Request Upload Data'
-        request_label = '{}: {}'.format(request_label, _request_label) if request_label is not None else _request_label
+        request_label = f'{request_label}: {request_label}' if request_label is not None else _request_label
 
         log.info(
-            '{}: Start'.format(request_label),
+            f'{request_label}: Start',
             extra={
                 'upload_data_size': upload_data_size,
                 'upload_request_url': upload_request_url,
@@ -190,7 +188,7 @@ class RequestMvIntegrationUpload(object):
         request_headers = {
             'Content-type': 'application/json; charset=utf8',
             'Accept': 'text/plain',
-            'Content-Length': "{}".format(upload_data_size)
+            'Content-Length': str(upload_data_size)
         }
 
         if upload_timeout:
@@ -215,22 +213,22 @@ class RequestMvIntegrationUpload(object):
             tmv_ex_extra = tmv_ex.to_dict()
             tmv_ex_extra.update({'error_exception': base_class_name(tmv_ex)})
 
-            log.error('{}: Failed'.format(request_label), extra=tmv_ex_extra)
+            log.error(f'{request_label}: Failed', extra=tmv_ex_extra)
             raise
 
         except Exception as ex:
             print_traceback(ex)
 
             log.error(
-                '{}: Failed: Unexpected'.format(request_label),
+                f'{request_label}: Failed: Unexpected',
                 extra={'error_exception': base_class_name(ex),
                        'error_details': get_exception_message(ex)}
             )
             raise TuneRequestModuleError(
-                error_message='{}: Failed: {}'.format(request_label, get_exception_message(ex)),
+                error_message=f'{request_label}: Failed: {get_exception_message(ex)}',
                 errors=ex,
                 error_code=TuneRequestErrorCodes.REQ_ERR_UPLOAD_DATA
             )
 
-        log.info('{}: Finished'.format(request_label))
+        log.info(f'{request_label}: Finished')
         return response

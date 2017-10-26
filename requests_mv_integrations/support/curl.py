@@ -108,7 +108,7 @@ def command_line_request_curl(
         elif isinstance(request_auth, requests.cookies.RequestsCookieJar):
             cookies_str_list = list()
             for k, v in request_auth.iteritems():
-                cookies_str_list.append('{}={}'.format(k, v))
+                cookies_str_list.append(f'{k}={v}')
             if cookies_str_list:
                 request_cookies = ' --cookie "' + ' '.join(cookies_str_list) + '"'
 
@@ -140,7 +140,7 @@ def command_line_request_curl(
             params = ["'{0}'".format(urllib.parse.unquote(param)) for param in params]
             params = " --data ".join(params)
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
 
             return command.format(
@@ -153,7 +153,7 @@ def command_line_request_curl(
         else:
             command += (" '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
 
             return command.format(
@@ -167,7 +167,7 @@ def command_line_request_curl(
         if request_data:
             command += (" --data '{data}'" " '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
 
             return command.format(
@@ -180,7 +180,7 @@ def command_line_request_curl(
         elif request_json:
             command += (" --data '{data}'" " '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
 
             return command.format(
@@ -193,7 +193,7 @@ def command_line_request_curl(
         else:
             command += (" '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
             return command.format(
                 request_method=request_method,
@@ -211,7 +211,7 @@ def command_line_request_curl(
 
             command += (" --data '{data}'" " '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
 
             return command.format(
@@ -224,7 +224,7 @@ def command_line_request_curl(
         else:
             command += (" '{url}'")
 
-            headers = ["'{0}: {1}'".format(k, v) for k, v in request_headers.items()]
+            headers = [f"'{k}: {v}'" for k, v in request_headers.items()]
             headers = " -H ".join(headers)
             return command.format(
                 request_method=request_method,

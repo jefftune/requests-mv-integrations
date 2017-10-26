@@ -39,7 +39,7 @@ def mv_request_retry_excps_func(excp, request_label=None):
 
     if isinstance(excp, TuneRequestBaseError):
         log.debug(
-            '{}: Expected'.format(request_label),
+            f'{request_label}: Expected',
             extra={
                 'error_exception': error_exception,
                 'error_details': error_details,
@@ -47,7 +47,7 @@ def mv_request_retry_excps_func(excp, request_label=None):
         )
     else:
         log.debug(
-            '{}: Unexpected'.format(request_label),
+            f'{request_label}: Unexpected',
             extra={
                 'error_exception': error_exception,
                 'error_details': error_details,
@@ -57,7 +57,7 @@ def mv_request_retry_excps_func(excp, request_label=None):
     if isinstance(excp, requests.exceptions.ConnectionError):
         if error_details.find('RemoteDisconnected') >= 0 or error_details.find('ConnectionResetError') >= 0:
             log.debug(
-                '{}: Retry'.format(request_label),
+                f'{request_label}: Retry',
                 extra={
                     'error_exception': error_exception,
                     'error_details': error_details,
@@ -68,7 +68,7 @@ def mv_request_retry_excps_func(excp, request_label=None):
     if isinstance(excp, TuneRequestBaseError) and excp.error_code == TuneRequestErrorCodes.REQ_ERR_REQUEST_CONNECT:
         if error_details.find('RemoteDisconnected') >= 0 or error_details.find('ConnectionResetError') >= 0:
             log.debug(
-                '{}: Retry'.format(request_label),
+                f'{request_label}: Retry',
                 extra={
                     'error_exception': error_exception,
                     'error_details': error_details,
@@ -77,7 +77,7 @@ def mv_request_retry_excps_func(excp, request_label=None):
             return True
 
     log.debug(
-        '{}: No Retry'.format(request_label),
+        f'{request_label}: No Retry',
         extra={
             'error_exception': error_exception,
             'error_details': error_details,

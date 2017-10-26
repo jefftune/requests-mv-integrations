@@ -119,7 +119,7 @@ class TuneRequestBaseError(Exception):
         error_message_ = None
         exit_code_description_ = tune_request_error_desc(error_code).rstrip('\.')
 
-        error_message_prefix_ = "{}: {}".format(error_code, exit_code_description_)
+        error_message_prefix_ = f"{error_code}: {exit_code_description_}"
 
         error_message = safe_str(error_message).strip()
 
@@ -144,35 +144,33 @@ class TuneRequestBaseError(Exception):
                 error_message += ", "
             else:
                 error_message = ""
-            error_message += "Error Reason: '{error_reason}'".format(error_reason=self.error_reason)
+            error_message += f"Error Reason: '{self.error_reason}'"
         if self.error_status:
             if error_message:
                 error_message += ", "
             else:
                 error_message = ""
-            error_message += "Exit Status: {error_status}".format(error_status=self.error_status)
+            error_message += f"Exit Status: {self.error_status}"
         if self.error_code:
             if error_message:
                 error_message += ", "
             else:
                 error_message = ""
-            error_message += "Exit Code: {error_code}, Exit Name: {error_name}".format(
-                error_code=self.error_code, error_name=tune_request_error_name(self.error_code)
-            )
+            error_message += f"Exit Code: {self.error_code}, Exit Name: {tune_request_error_name(self.error_code)}"
         if self.error_details:
             if error_message:
                 error_message += ", "
             else:
                 error_message = ""
-            error_message += "Error Details: {error_details}".format(error_details=self.error_details)
+            error_message += f"Error Details: {self.error_details}"
         if self.errors:
             if error_message:
                 error_message += ", "
             else:
                 error_message = ""
-            error_message += "Errors: {errors}".format(errors=self.errors)
+            error_message += f"Errors: {self.errors}"
 
-        return "{}: {}".format(error_origin, error_message)
+        return f"{error_origin}: {error_message}"
 
     def to_dict(self):
 

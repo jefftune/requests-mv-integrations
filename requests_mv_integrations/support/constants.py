@@ -16,9 +16,9 @@ __MODULE_SIG__ = "%s/%s" % (__title__, __MODULE_VERSION__)
 __TIMEZONE_NAME_DEFAULT__ = "UTC"
 
 __PYTHON_VERSION__ = '%d.%d.%d' % (sys.version_info[0], sys.version_info[1], sys.version_info[2])
-__PYTHON_SIG__ = 'Python/%s' % (__PYTHON_VERSION__)
+__PYTHON_SIG__ = f"Python/{__PYTHON_VERSION__}"
 
-__USER_AGENT__ = "({}, {})".format(__MODULE_SIG__, __PYTHON_SIG__)
+__USER_AGENT__ = f"({__MODULE_SIG__}, {__PYTHON_SIG__})"
 
 __LOGGER_NAME__ = __name__.split('.')[0]
 

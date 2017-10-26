@@ -376,9 +376,7 @@ class TestRequestMvIntegration:
         try:
             request_mv_integration_object.request('GET', 'http://localhost:8998/status/' + str(tested_http_response))
         except Exception as ex:
-            assert ex.error_code == tested_http_response, "Expected: {}, Actual: {}".format(
-                tested_http_response, ex.error_code
-            )
+            assert ex.error_code == tested_http_response, f"Expected: {tested_http_response}, Actual: {ex.error_code}"
 
     def test_request_raised_exceptions_method_none(self, request_mv_integration_object):
         """
@@ -470,7 +468,7 @@ class TestRequestMvIntegration:
                     exception_instance = all_exception_type_exceptions
                     raise exception_instance
             else:
-                raise Exception("Bad input to test: No {} exceptions".format(exception_type_name))
+                raise Exception(f"Bad input to test: No {exception_type_name} exceptions")
 
         monkeypatch.setattr(
             request_mv_integration_object,

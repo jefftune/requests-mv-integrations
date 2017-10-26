@@ -3,8 +3,12 @@
 Release History
 ===============
 
+00.05.06 (2017-10-26)
+---------------------
+- Using formatted string literals
+
 00.05.05 (2017-09-12)
--------------------
+---------------------
 - logger_output: STDOUT, STDOUT_COLOR, FILE
 - logger_filter: NOTE
 

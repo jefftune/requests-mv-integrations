@@ -41,7 +41,7 @@ def requests_response_text_html(response):
         except Exception as ex:
             raise ValueError("Failed to parse text/html", errors=ex)
     else:
-        raise ValueError("Unexpected 'Content-Type': '{}'".format(response_content_type))
+        raise ValueError(f"Unexpected 'Content-Type': '{response_content_type}'")
 
     return response_content_html_lines
 
@@ -73,6 +73,6 @@ def requests_response_text_xml(response):
             xml_json = json.loads(json.dumps(xml_dictionary))
 
     else:
-        raise ValueError("Unexpected 'Content-Type': '{}'".format(response_content_type))
+        raise ValueError(f"Unexpected 'Content-Type': '{response_content_type}'")
 
     return xml_json
